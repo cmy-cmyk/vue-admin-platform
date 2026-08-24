@@ -28,4 +28,14 @@ export default defineConfig({
 	define: {
 		__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: "true",
 	},
+	server: {
+		port: 5173,
+		// 开发环境代理:把 /api 转发到后端 Express(默认 3000)
+		proxy: {
+			'/api': {
+				target: 'http://localhost:3000',
+				changeOrigin: true,
+			},
+		},
+	},
 });

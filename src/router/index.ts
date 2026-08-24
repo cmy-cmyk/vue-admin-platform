@@ -1,293 +1,147 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import { usePermissStore } from '../store/permiss';
+import { useUserStore } from '../store/user';
 import Home from '../views/home.vue';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-const routes: RouteRecordRaw[] = [
-    {
-        path: '/',
-        redirect: '/dashboard',
-    },
-    {
-        path: '/',
-        name: 'Home',
-        component: Home,
-        children: [
-            {
-                path: '/dashboard',
-                name: 'dashboard',
-                meta: {
-                    title: '系统首页',
-                    noAuth: true,
-                },
-                component: () => import(/* webpackChunkName: "dashboard" */ '../views/dashboard.vue'),
-            },
-            {
-                path: '/system-user',
-                name: 'system-user',
-                meta: {
-                    title: '用户管理',
-                    permiss: '11',
-                },
-                component: () => import(/* webpackChunkName: "system-user" */ '../views/system/user.vue'),
-            },
-            {
-                path: '/system-role',
-                name: 'system-role',
-                meta: {
-                    title: '角色管理',
-                    permiss: '12',
-                },
-                component: () => import(/* webpackChunkName: "system-role" */ '../views/system/role.vue'),
-            },
-            {
-                path: '/system-menu',
-                name: 'system-menu',
-                meta: {
-                    title: '菜单管理',
-                    permiss: '13',
-                },
-                component: () => import(/* webpackChunkName: "system-menu" */ '../views/system/menu.vue'),
-            },
-            {
-                path: '/table',
-                name: 'basetable',
-                meta: {
-                    title: '基础表格',
-                    permiss: '31',
-                },
-                component: () => import(/* webpackChunkName: "table" */ '../views/table/basetable.vue'),
-            },
-            {
-                path: '/table-editor',
-                name: 'table-editor',
-                meta: {
-                    title: '可编辑表格',
-                    permiss: '32',
-                },
-                component: () => import(/* webpackChunkName: "table-editor" */ '../views/table/table-editor.vue'),
-            },
-            {
-                path: '/schart',
-                name: 'schart',
-                meta: {
-                    title: 'schart图表',
-                    permiss: '41',
-                },
-                component: () => import(/* webpackChunkName: "schart" */ '../views/chart/schart.vue'),
-            },
-            {
-                path: '/echarts',
-                name: 'echarts',
-                meta: {
-                    title: 'echarts图表',
-                    permiss: '42',
-                },
-                component: () => import(/* webpackChunkName: "echarts" */ '../views/chart/echarts.vue'),
-            },
-
-            {
-                path: '/icon',
-                name: 'icon',
-                meta: {
-                    title: '图标',
-                    permiss: '5',
-                },
-                component: () => import(/* webpackChunkName: "icon" */ '../views/pages/icon.vue'),
-            },
-            {
-                path: '/ucenter',
-                name: 'ucenter',
-                meta: {
-                    title: '个人中心',
-                },
-                component: () => import(/* webpackChunkName: "ucenter" */ '../views/pages/ucenter.vue'),
-            },
-            {
-                path: '/editor',
-                name: 'editor',
-                meta: {
-                    title: '富文本编辑器',
-                    permiss: '291',
-                },
-                component: () => import(/* webpackChunkName: "editor" */ '../views/pages/editor.vue'),
-            },
-            {
-                path: '/markdown',
-                name: 'markdown',
-                meta: {
-                    title: 'markdown编辑器',
-                    permiss: '292',
-                },
-                component: () => import(/* webpackChunkName: "markdown" */ '../views/pages/markdown.vue'),
-            },
-            {
-                path: '/export',
-                name: 'export',
-                meta: {
-                    title: '导出Excel',
-                    permiss: '34',
-                },
-                component: () => import(/* webpackChunkName: "export" */ '../views/table/export.vue'),
-            },
-            {
-                path: '/import',
-                name: 'import',
-                meta: {
-                    title: '导入Excel',
-                    permiss: '33',
-                },
-                component: () => import(/* webpackChunkName: "import" */ '../views/table/import.vue'),
-            },
-            {
-                path: '/theme',
-                name: 'theme',
-                meta: {
-                    title: '主题设置',
-                    permiss: '7',
-                },
-                component: () => import(/* webpackChunkName: "theme" */ '../views/pages/theme.vue'),
-            },
-            {
-                path: '/calendar',
-                name: 'calendar',
-                meta: {
-                    title: '日历',
-                    permiss: '24',
-                },
-                component: () => import(/* webpackChunkName: "calendar" */ '../views/element/calendar.vue'),
-            },
-            {
-                path: '/watermark',
-                name: 'watermark',
-                meta: {
-                    title: '水印',
-                    permiss: '25',
-                },
-                component: () => import(/* webpackChunkName: "watermark" */ '../views/element/watermark.vue'),
-            },
-            {
-                path: '/carousel',
-                name: 'carousel',
-                meta: {
-                    title: '走马灯',
-                    permiss: '23',
-                },
-                component: () => import(/* webpackChunkName: "carousel" */ '../views/element/carousel.vue'),
-            },
-            {
-                path: '/tour',
-                name: 'tour',
-                meta: {
-                    title: '分步引导',
-                    permiss: '26',
-                },
-                component: () => import(/* webpackChunkName: "tour" */ '../views/element/tour.vue'),
-            },
-            {
-                path: '/steps',
-                name: 'steps',
-                meta: {
-                    title: '步骤条',
-                    permiss: '27',
-                },
-                component: () => import(/* webpackChunkName: "steps" */ '../views/element/steps.vue'),
-            },
-            {
-                path: '/form',
-                name: 'forms',
-                meta: {
-                    title: '表单',
-                    permiss: '21',
-                },
-                component: () => import(/* webpackChunkName: "form" */ '../views/element/form.vue'),
-            },
-            {
-                path: '/upload',
-                name: 'upload',
-                meta: {
-                    title: '上传',
-                    permiss: '22',
-                },
-                component: () => import(/* webpackChunkName: "upload" */ '../views/element/upload.vue'),
-            },
-            {
-                path: '/statistic',
-                name: 'statistic',
-                meta: {
-                    title: '统计',
-                    permiss: '28',
-                },
-                component: () => import(/* webpackChunkName: "statistic" */ '../views/element/statistic.vue'),
-            },
-        ],
-    },
+// ========== 静态路由 ==========
+// 1. 公开路由(noAuth):无需登录即可访问
+// 2. Home 布局路由:作为动态业务路由的父级容器,空 children 占位
+const staticRoutes: RouteRecordRaw[] = [
     {
         path: '/login',
-        meta: {
-            title: '登录',
-            noAuth: true,
-        },
-        component: () => import(/* webpackChunkName: "login" */ '../views/pages/login.vue'),
+        meta: { title: '登录', noAuth: true },
+        component: () => import('../views/pages/login.vue'),
     },
     {
         path: '/register',
-        meta: {
-            title: '注册',
-            noAuth: true,
-        },
-        component: () => import(/* webpackChunkName: "register" */ '../views/pages/register.vue'),
+        meta: { title: '注册', noAuth: true },
+        component: () => import('../views/pages/register.vue'),
     },
     {
         path: '/reset-pwd',
-        meta: {
-            title: '重置密码',
-            noAuth: true,
-        },
-        component: () => import(/* webpackChunkName: "reset-pwd" */ '../views/pages/reset-pwd.vue'),
+        meta: { title: '重置密码', noAuth: true },
+        component: () => import('../views/pages/reset-pwd.vue'),
     },
     {
         path: '/403',
-        meta: {
-            title: '没有权限',
-            noAuth: true,
-        },
-        component: () => import(/* webpackChunkName: "403" */ '../views/pages/403.vue'),
+        meta: { title: '没有权限', noAuth: true },
+        component: () => import('../views/pages/403.vue'),
     },
     {
         path: '/404',
-        meta: {
-            title: '找不到页面',
-            noAuth: true,
-        },
-        component: () => import(/* webpackChunkName: "404" */ '../views/pages/404.vue'),
+        meta: { title: '找不到页面', noAuth: true },
+        component: () => import('../views/pages/404.vue'),
     },
-    { path: '/:path(.*)', redirect: '/404' },
+    {
+        // Home 是布局容器,业务子路由全部动态注册到它的 children
+        path: '/',
+        name: 'Home',
+        component: Home,
+        children: [],
+    },
 ];
 
 const router = createRouter({
     history: createWebHashHistory(),
-    routes,
+    routes: staticRoutes,
 });
 
-router.beforeEach((to, from, next) => {
-    NProgress.start();
-    const role = localStorage.getItem('vuems_name');
-    const permiss = usePermissStore();
+// ========== 动态路由注册工具 ==========
+// 用 import.meta.glob 把 src/views 下的 .vue 文件预先收集,后端菜单返回 component 字段时映射到具体组件
+const modules = import.meta.glob('../views/**/*.vue');
 
-    if (!role && to.meta.noAuth !== true) {
-        next('/login');
-    } else if (typeof to.meta.permiss == 'string' && !permiss.key.includes(to.meta.permiss)) {
-        // 如果没有权限，则进入403
-        next('/403');
-    } else {
-        next();
+function getComponent(componentPath: string) {
+    // 后端返回 'dashboard' 或 'system/user',这里拼出 ../views/dashboard.vue 或 ../views/system/user.vue
+    const full = `../views/${componentPath}.vue`;
+    return modules[full] || (() => import('../views/pages/404.vue'));
+}
+
+// 递归把后端返回的菜单树转成路由树,挂到 Home 下
+function buildDynamicRoutes(menus: any[]): RouteRecordRaw[] {
+    return menus
+        .filter((m) => m.menu_type !== 2) // 按钮不算路由
+        .map((m) => {
+            const route: RouteRecordRaw = {
+                path: m.path,
+                name: m.path,
+                meta: {
+                    title: m.menu_name,
+                    permiss: m.permiss || '',
+                    icon: m.icon || '',
+                },
+                component: m.component ? getComponent(m.component) : undefined,
+            };
+            if (m.children && m.children.length > 0) {
+                route.children = buildDynamicRoutes(m.children);
+            }
+            return route;
+        });
+}
+
+function addDynamicRoutes(menus: any[]) {
+    const routes = buildDynamicRoutes(menus);
+    routes.forEach((r) => {
+        // 全部挂到 Home 下作为 children
+        router.addRoute('Home', r);
+    });
+}
+
+function resetRouter() {
+    // 退出登录时调用,清掉动态路由(暂用粗暴实现:重新创建 router)
+    // 完整版应记录已注册的动态路由名,逐一 removeRoute
+    location.reload();
+}
+
+// ========== 路由守卫 ==========
+router.beforeEach(async (to, from, next) => {
+    NProgress.start();
+    document.title = (to.meta.title as string) ? `${to.meta.title} - Vue Admin Platform` : 'Vue Admin Platform';
+
+    const userStore = useUserStore();
+    const hasToken = !!localStorage.getItem('vap_access_token');
+
+    // 1. 未登录
+    if (!hasToken) {
+        if (to.meta.noAuth) {
+            next();
+        } else {
+            next({ path: '/login', query: { redirect: to.fullPath } });
+        }
+        return;
     }
+
+    // 2. 已登录但访问登录页,直接回首页
+    if (to.path === '/login') {
+        next({ path: '/' });
+        return;
+    }
+
+    // 3. 已登录,但路由还没动态加载(刷新页面场景)
+    if (!userStore.isRoutesLoaded) {
+        try {
+            await userStore.fetchUserInfo();
+            addDynamicRoutes(userStore.menus);
+            // 关键:next({ ...to, replace: true }) 让重定向后再次匹配刚注册的路由
+            // 否则刷新会停在 /404
+            next({ ...to, replace: true });
+            return;
+        } catch (e) {
+            // 拉用户信息失败:token 失效或后端异常,踢登录
+            userStore.resetState();
+            next({ path: '/login', query: { redirect: to.fullPath } });
+            return;
+        }
+    }
+
+    // 4. 已登录且路由已加载,正常放行
+    // 按钮权限校验由 v-permiss 指令负责,这里不阻断路由
+    next();
 });
 
 router.afterEach(() => {
     NProgress.done();
 });
 
+export { resetRouter };
 export default router;

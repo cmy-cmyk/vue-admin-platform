@@ -33,8 +33,8 @@
                     <el-checkbox class="pwd-checkbox" v-model="checked" label="记住密码" />
                     <el-link type="primary" @click="$router.push('/reset-pwd')">忘记密码</el-link>
                 </div>
-                <el-button class="login-btn" type="primary" size="large" @click="submitForm(login)">登录</el-button>
-                <p class="login-tips">Tips : 演示账号 admin / 123456(待接入真实接口)</p>
+                <el-button class="login-btn" type="primary" size="large" :loading="loading" @click="submitForm(login)">登录</el-button>
+                <p class="login-tips">Tips : 演示账号 admin / 123456 或 user / 123456</p>
                 <p class="login-text">
                     没有账号？<el-link type="primary" @click="$router.push('/register')">立即注册</el-link>
                 </p>
@@ -46,8 +46,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
 import { useTabsStore } from '@/store/tabs';
-import { usePermissStore } from '@/store/permiss';
-import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/user';
+import { useRouter, useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 
@@ -61,9 +61,10 @@ const defParam = lgStr ? JSON.parse(lgStr) : null;
 const checked = ref(lgStr ? true : false);
 
 const router = useRouter();
+const route = useRoute();
 const param = reactive<LoginInfo>({
-    username: defParam ? defParam.username : '',
-    password: defParam ? defParam.password : '',
+    username: defParam ? defParam.username : 'admin',
+    password: defParam ? defParam.password : '123456',
 });
 
 const rules: FormRules = {
@@ -76,25 +77,34 @@ const rules: FormRules = {
     ],
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 };
-const permiss = usePermissStore();
+const userStore = useUserStore();
 const login = ref<FormInstance>();
+const loading = ref(false);
+
 const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
-    formEl.validate((valid: boolean) => {
-        if (valid) {
+    formEl.validate(async (valid: boolean) => {
+        if (!valid) {
+            ElMessage.error('请检查输入');
+            return false;
+        }
+        loading.value = true;
+        try {
+            await userStore.login(param);
             ElMessage.success('登录成功');
-            localStorage.setItem('vuems_name', param.username);
-            const keys = permiss.defaultList[param.username == 'admin' ? 'admin' : 'user'];
-            permiss.handleSet(keys);
-            router.push('/');
             if (checked.value) {
                 localStorage.setItem('login-param', JSON.stringify(param));
             } else {
                 localStorage.removeItem('login-param');
             }
-        } else {
-            ElMessage.error('登录失败');
-            return false;
+            // 路由守卫会自动拉用户信息 + 动态注册路由
+            const redirect = (route.query.redirect as string) || '/';
+            router.push(redirect);
+        } catch (e: any) {
+            // axios 拦截器已弹错误提示,这里不重复弹
+            console.error(e);
+        } finally {
+            loading.value = false;
         }
     });
 };

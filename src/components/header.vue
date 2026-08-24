@@ -60,12 +60,15 @@
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
+import { useUserStore } from '../store/user';
 import { useRouter } from 'vue-router';
+import { resetRouter } from '../router';
 import imgurl from '../assets/img/img.jpg';
 
-const username: string | null = localStorage.getItem('vuems_name');
+const userStore = useUserStore();
+const username = computed(() => userStore.userInfo?.nickname || userStore.userInfo?.username || '游客');
 const message: number = 2;
 
 const sidebar = useSidebarStore();
@@ -82,9 +85,10 @@ onMounted(() => {
 
 // 用户名下拉菜单选择事件
 const router = useRouter();
-const handleCommand = (command: string) => {
+const handleCommand = async (command: string) => {
     if (command == 'loginout') {
-        localStorage.removeItem('vuems_name');
+        await userStore.logout();
+        resetRouter();
         router.push('/login');
     } else if (command == 'user') {
         router.push('/ucenter');
