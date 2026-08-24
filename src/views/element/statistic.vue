@@ -1,7 +1,5 @@
 <template>
     <div>
-
-
         <el-card class="mgb20" shadow="hover">
             <template #header>基础用法</template>
             <el-row>
@@ -11,9 +9,7 @@
                 <el-col :span="6" style="text-align: center">
                     <el-statistic :value="138">
                         <template #title>
-                            <div style="display: inline-flex; align-items: center">
-                                Ratio of men to women
-                            </div>
+                            <div style="display: inline-flex; align-items: center">Ratio of men to women</div>
                         </template>
                         <template #suffix>/100</template>
                     </el-statistic>
@@ -184,7 +180,7 @@
             <el-row :gutter="20" class="mgb20">
                 <el-col :span="6">
                     <el-card shadow="hover" body-class="card-body bg1">
-                        <el-icon class="card-icon ">
+                        <el-icon class="card-icon">
                             <User />
                         </el-icon>
                         <div class="card-content color0">
@@ -210,7 +206,7 @@
                             <Goods />
                         </el-icon>
                         <div class="card-content color0">
-                            <countup class="card-num " :end="8888" />
+                            <countup class="card-num" :end="8888" />
                             <div>商品数量</div>
                         </div>
                     </el-card>
@@ -221,7 +217,7 @@
                             <ShoppingCartFull />
                         </el-icon>
                         <div class="card-content color0">
-                            <countup class="card-num " :end="568" />
+                            <countup class="card-num" :end="568" />
                             <div>今日订单量</div>
                         </div>
                     </el-card>
@@ -232,17 +228,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useTransition } from '@vueuse/core'
+import { ref } from 'vue';
+import { useTransition } from '@vueuse/core';
 import countup from '@/components/countup.vue';
 
-const source = ref(0)
+const source = ref(0);
 const outputValue = useTransition(source, {
-    duration: 1500,
-})
-source.value = 172000
+    duration: 1500
+});
+source.value = 172000;
 
-const value = ref(Date.now() + 1000 * 60 * 60 * 7)
+const value = ref(Date.now() + 1000 * 60 * 60 * 7);
 const value1 = ref(1000);
 setTimeout(() => {
     value1.value = 8000;
@@ -255,8 +251,8 @@ const options = {
     prefix: '$',
     separator: ',',
     decimal: '.',
-    suffix: '',
-}
+    suffix: ''
+};
 </script>
 
 <style>
@@ -308,7 +304,6 @@ const options = {
     line-height: 100px;
     color: #fff;
 }
-
 
 .color0 {
     color: #fff;

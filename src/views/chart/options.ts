@@ -2,47 +2,47 @@ import { graphic } from 'echarts/core';
 export const barOptions = {
     xAxis: {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
     yAxis: {
-        type: 'value',
+        type: 'value'
     },
     tooltip: {
         trigger: 'axis',
         axisPointer: {
-            type: 'shadow',
-        },
+            type: 'shadow'
+        }
     },
     color: ['#009688', '#f44336'],
     series: [
         {
             data: [120, 200, 150, 80, 70, 110, 130],
-            type: 'bar',
+            type: 'bar'
         },
         {
             data: [180, 230, 190, 120, 110, 230, 235],
-            type: 'bar',
-        },
-    ],
+            type: 'bar'
+        }
+    ]
 };
 
 export const lineOptions = {
     tooltip: {
-        trigger: 'axis',
+        trigger: 'axis'
     },
     grid: {
         left: '3%',
         right: '4%',
         bottom: '3%',
-        containLabel: true,
+        containLabel: true
     },
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
     yAxis: {
-        type: 'value',
+        type: 'value'
     },
     color: ['#009688', '#f44336'],
     series: [
@@ -52,7 +52,7 @@ export const lineOptions = {
             stack: 'Total',
             areaStyle: {},
             smooth: true,
-            data: [120, 132, 101, 134, 90, 230, 210],
+            data: [120, 132, 101, 134, 90, 230, 210]
         },
         {
             name: 'Union Ads',
@@ -60,23 +60,23 @@ export const lineOptions = {
             stack: 'Total',
             areaStyle: {},
             smooth: true,
-            data: [220, 182, 191, 234, 290, 330, 310],
-        },
-    ],
+            data: [220, 182, 191, 234, 290, 330, 310]
+        }
+    ]
 };
 
 export const pieOptions = {
     title: {
         text: 'Referer of a Website',
         subtext: 'Fake Data',
-        left: 'center',
+        left: 'center'
     },
     tooltip: {
-        trigger: 'item',
+        trigger: 'item'
     },
     legend: {
         orient: 'vertical',
-        left: 'left',
+        left: 'left'
     },
     series: [
         {
@@ -88,17 +88,17 @@ export const pieOptions = {
                 { value: 735, name: 'Direct' },
                 { value: 580, name: 'Email' },
                 { value: 484, name: 'Union Ads' },
-                { value: 300, name: 'Video Ads' },
+                { value: 300, name: 'Video Ads' }
             ],
             emphasis: {
                 itemStyle: {
                     shadowBlur: 10,
                     shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)',
-                },
-            },
-        },
-    ],
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
 };
 
 export const wordOptions = {
@@ -108,7 +108,7 @@ export const wordOptions = {
             rotationRange: [0, 0],
             autoSize: {
                 enable: true,
-                minSize: 14,
+                minSize: 14
             },
             textStyle: {
                 fontFamily: '微软雅黑,sans-serif',
@@ -118,73 +118,73 @@ export const wordOptions = {
                         [
                             Math.round(Math.random() * 160),
                             Math.round(Math.random() * 160),
-                            Math.round(Math.random() * 160),
+                            Math.round(Math.random() * 160)
                         ].join(',') +
                         ')'
                     );
-                },
+                }
             },
             data: [
                 {
                     name: 'Vue',
-                    value: 10000,
+                    value: 10000
                 },
                 {
                     name: 'React',
-                    value: 9000,
+                    value: 9000
                 },
                 {
                     name: '图表',
-                    value: 4000,
+                    value: 4000
                 },
                 {
                     name: '产品',
-                    value: 7000,
+                    value: 7000
                 },
                 {
                     name: 'vue-manage-system',
-                    value: 2000,
+                    value: 2000
                 },
                 {
                     name: 'element-plus',
-                    value: 6000,
+                    value: 6000
                 },
                 {
                     name: '管理系统',
-                    value: 5000,
+                    value: 5000
                 },
                 {
                     name: '前端',
-                    value: 4000,
+                    value: 4000
                 },
                 {
                     name: '测试',
-                    value: 3000,
+                    value: 3000
                 },
                 {
                     name: '后端',
-                    value: 8000,
+                    value: 8000
                 },
                 {
                     name: '软件开发',
-                    value: 6000,
+                    value: 6000
                 },
                 {
                     name: '程序员',
-                    value: 4000,
-                },
-            ],
-        },
-    ],
+                    value: 4000
+                }
+            ]
+        }
+    ]
 };
 
 export const ringOptions = {
     tooltip: {
-        trigger: 'item',
+        trigger: 'item'
     },
     legend: {
         top: '5%',
-        left: 'center',
+        left: 'center'
     },
 
     series: [
@@ -196,48 +196,48 @@ export const ringOptions = {
             itemStyle: {
                 borderRadius: 10,
                 borderColor: '#fff',
-                borderWidth: 2,
+                borderWidth: 2
             },
             label: {
                 show: false,
-                position: 'center',
+                position: 'center'
             },
             emphasis: {
                 label: {
                     show: true,
                     fontSize: 40,
-                    fontWeight: 'bold',
-                },
+                    fontWeight: 'bold'
+                }
             },
             labelLine: {
-                show: false,
+                show: false
             },
             data: [
                 { value: 1048, name: 'Search Engine' },
                 { value: 735, name: 'Direct' },
                 { value: 580, name: 'Email' },
                 { value: 484, name: 'Union Ads' },
-                { value: 300, name: 'Video Ads' },
-            ],
-        },
-    ],
+                { value: 300, name: 'Video Ads' }
+            ]
+        }
+    ]
 };
 
 export const dashOpt1 = {
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
     yAxis: {
-        type: 'value',
+        type: 'value'
     },
     grid: {
         top: '2%',
         left: '2%',
         right: '3%',
         bottom: '2%',
-        containLabel: true,
+        containLabel: true
     },
     color: ['#009688', '#f44336'],
     series: [
@@ -247,29 +247,29 @@ export const dashOpt1 = {
                 color: new graphic.LinearGradient(0, 0, 0, 1, [
                     {
                         offset: 0,
-                        color: 'rgba(0, 150, 136,0.8)',
+                        color: 'rgba(0, 150, 136,0.8)'
                     },
                     {
                         offset: 1,
-                        color: 'rgba(0, 150, 136,0.2)',
-                    },
-                ]),
+                        color: 'rgba(0, 150, 136,0.2)'
+                    }
+                ])
             },
             smooth: true,
-            data: [120, 132, 301, 134, 90, 230, 210],
+            data: [120, 132, 301, 134, 90, 230, 210]
         },
         {
             type: 'line',
             smooth: true,
-            data: [220, 122, 191, 234, 190, 130, 310],
-        },
-    ],
+            data: [220, 122, 191, 234, 190, 130, 310]
+        }
+    ]
 };
 
 export const dashOpt2 = {
     legend: {
         bottom: '1%',
-        left: 'center',
+        left: 'center'
     },
     color: ['#3f51b5', '#009688', '#f44336', '#00bcd4', '#1ABC9C'],
     series: [
@@ -280,31 +280,31 @@ export const dashOpt2 = {
             itemStyle: {
                 borderRadius: 10,
                 borderColor: '#fff',
-                borderWidth: 2,
+                borderWidth: 2
             },
             data: [
                 { value: 1048, name: '数码' },
                 { value: 735, name: '食品' },
                 { value: 580, name: '母婴' },
                 { value: 484, name: '家电' },
-                { value: 300, name: '运动' },
-            ],
-        },
-    ],
+                { value: 300, name: '运动' }
+            ]
+        }
+    ]
 };
 
 export const mapOptions = {
     tooltip: {
-        trigger: 'item',
+        trigger: 'item'
     },
     geo: {
         map: 'china',
         roam: false,
         emphasis: {
             label: {
-                show: false,
-            },
-        },
+                show: false
+            }
+        }
     },
     visualMap: {
         show: false,
@@ -313,8 +313,8 @@ export const mapOptions = {
         realtime: false,
         calculable: false,
         inRange: {
-            color: ['#d2e0f5', '#71A9FF'],
-        },
+            color: ['#d2e0f5', '#71A9FF']
+        }
     },
     series: [
         {
@@ -338,8 +338,8 @@ export const mapOptions = {
                 { name: '黑龙江', value: 20 },
                 { name: '新疆', value: 20 },
                 { name: '云南', value: 20 },
-                { name: '甘肃', value: 20 },
-            ],
-        },
-    ],
+                { name: '甘肃', value: 20 }
+            ]
+        }
+    ]
 };

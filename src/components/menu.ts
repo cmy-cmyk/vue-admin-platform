@@ -5,7 +5,7 @@ export const menuData: Menus[] = [
         id: '0',
         title: '系统首页',
         index: '/dashboard',
-        icon: 'Odometer',
+        icon: 'Odometer'
     },
     {
         id: '1',
@@ -17,21 +17,21 @@ export const menuData: Menus[] = [
                 id: '11',
                 pid: '1',
                 index: '/system-user',
-                title: '用户管理',
+                title: '用户管理'
             },
             {
                 id: '12',
                 pid: '1',
                 index: '/system-role',
-                title: '角色管理',
+                title: '角色管理'
             },
             {
                 id: '13',
                 pid: '1',
                 index: '/system-menu',
-                title: '菜单管理',
-            },
-        ],
+                title: '菜单管理'
+            }
+        ]
     },
     {
         id: '2',
@@ -43,49 +43,49 @@ export const menuData: Menus[] = [
                 id: '21',
                 pid: '3',
                 index: '/form',
-                title: '表单',
+                title: '表单'
             },
             {
                 id: '22',
                 pid: '3',
                 index: '/upload',
-                title: '上传',
+                title: '上传'
             },
             {
                 id: '23',
                 pid: '2',
                 index: '/carousel',
-                title: '走马灯',
+                title: '走马灯'
             },
             {
                 id: '24',
                 pid: '2',
                 index: '/calendar',
-                title: '日历',
+                title: '日历'
             },
             {
                 id: '25',
                 pid: '2',
                 index: '/watermark',
-                title: '水印',
+                title: '水印'
             },
             {
                 id: '26',
                 pid: '2',
                 index: '/tour',
-                title: '分布引导',
+                title: '分布引导'
             },
             {
                 id: '27',
                 pid: '2',
                 index: '/steps',
-                title: '步骤条',
+                title: '步骤条'
             },
             {
                 id: '28',
                 pid: '2',
                 index: '/statistic',
-                title: '统计',
+                title: '统计'
             },
             {
                 id: '29',
@@ -97,17 +97,17 @@ export const menuData: Menus[] = [
                         id: '291',
                         pid: '29',
                         index: '/editor',
-                        title: '富文本编辑器',
+                        title: '富文本编辑器'
                     },
                     {
                         id: '292',
                         pid: '29',
                         index: '/markdown',
-                        title: 'markdown编辑器',
-                    },
-                ],
-            },
-        ],
+                        title: 'markdown编辑器'
+                    }
+                ]
+            }
+        ]
     },
     {
         id: '3',
@@ -119,27 +119,27 @@ export const menuData: Menus[] = [
                 id: '31',
                 pid: '3',
                 index: '/table',
-                title: '基础表格',
+                title: '基础表格'
             },
             {
                 id: '32',
                 pid: '3',
                 index: '/table-editor',
-                title: '可编辑表格',
+                title: '可编辑表格'
             },
             {
                 id: '33',
                 pid: '3',
                 index: '/import',
-                title: '导入Excel',
+                title: '导入Excel'
             },
             {
                 id: '34',
                 pid: '3',
                 index: '/export',
-                title: '导出Excel',
-            },
-        ],
+                title: '导出Excel'
+            }
+        ]
     },
     {
         id: '4',
@@ -151,28 +151,28 @@ export const menuData: Menus[] = [
                 id: '41',
                 pid: '4',
                 index: '/schart',
-                title: 'schart图表',
+                title: 'schart图表'
             },
             {
                 id: '42',
                 pid: '4',
                 index: '/echarts',
-                title: 'echarts图表',
-            },
-        ],
+                title: 'echarts图表'
+            }
+        ]
     },
     {
         id: '5',
         icon: 'Guide',
         index: '/icon',
         title: '图标',
-        permiss: '5',
+        permiss: '5'
     },
     {
         id: '7',
         icon: 'Brush',
         index: '/theme',
-        title: '主题',
+        title: '主题'
     },
     {
         id: '6',
@@ -184,38 +184,38 @@ export const menuData: Menus[] = [
                 id: '61',
                 pid: '6',
                 index: '/ucenter',
-                title: '个人中心',
+                title: '个人中心'
             },
             {
                 id: '62',
                 pid: '6',
                 index: '/login',
-                title: '登录',
+                title: '登录'
             },
             {
                 id: '63',
                 pid: '6',
                 index: '/register',
-                title: '注册',
+                title: '注册'
             },
             {
                 id: '64',
                 pid: '6',
                 index: '/reset-pwd',
-                title: '重设密码',
+                title: '重设密码'
             },
             {
                 id: '65',
                 pid: '6',
                 index: '/403',
-                title: '403',
+                title: '403'
             },
             {
                 id: '66',
                 pid: '6',
                 index: '/404',
-                title: '404',
-            },
-        ],
-    },
+                title: '404'
+            }
+        ]
+    }
 ];

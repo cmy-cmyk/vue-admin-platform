@@ -6,7 +6,7 @@ import {
     type LoginParams,
     type LoginResult,
     type UserInfoResult,
-    type MenuTreeNode,
+    type MenuTreeNode
 } from '@/api/auth';
 import { tokenStorage } from '@/utils/request';
 
@@ -25,11 +25,11 @@ export const useUserStore = defineStore('user', {
         roles: [],
         permissions: [],
         menus: [],
-        isRoutesLoaded: false,
+        isRoutesLoaded: false
     }),
 
     getters: {
-        isLoggedIn: (state) => !!tokenStorage.getAccessToken(),
+        isLoggedIn: state => !!tokenStorage.getAccessToken()
     },
 
     actions: {
@@ -77,6 +77,6 @@ export const useUserStore = defineStore('user', {
             // admin 角色直接放行所有
             if (this.roles.includes('admin')) return true;
             return this.permissions.includes(permiss);
-        },
-    },
+        }
+    }
 });

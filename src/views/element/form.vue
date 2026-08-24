@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <el-radio-group class="mgb20" v-model="labelPosition">
+        <el-radio-group v-model="labelPosition" class="mgb20">
             <el-radio-button value="left">Left</el-radio-button>
             <el-radio-button value="right">Right</el-radio-button>
             <el-radio-button value="top">Top</el-radio-button>
@@ -15,11 +15,10 @@
                         <el-input-number v-model="form.num" :min="1" :max="10" />
                     </el-form-item>
                     <el-form-item label="日期选择" prop="date">
-                        <el-date-picker type="date" placeholder="选择日期" v-model="form.date"></el-date-picker>
+                        <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="时间选择" prop="time">
-                        <el-time-picker placeholder="选择时间" v-model="form.time">
-                        </el-time-picker>
+                        <el-time-picker v-model="form.time" placeholder="选择时间"></el-time-picker>
                     </el-form-item>
                     <el-form-item label="选择器" prop="region">
                         <el-select v-model="form.region" placeholder="请选择">
@@ -29,10 +28,10 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="城市级联" prop="options">
-                        <el-cascader :options="options" v-model="form.options"></el-cascader>
+                        <el-cascader v-model="form.options" :options="options"></el-cascader>
                     </el-form-item>
                     <el-form-item label="文本框" prop="desc">
-                        <el-input type="textarea" rows="5" v-model="form.desc"></el-input>
+                        <el-input v-model="form.desc" type="textarea" rows="5"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -82,7 +81,7 @@
 import { reactive, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormProps, FormRules } from 'element-plus';
-const labelPosition = ref<FormProps['labelPosition']>('right')
+const labelPosition = ref<FormProps['labelPosition']>('right');
 const options = [
     {
         value: 'guangdong',
@@ -94,13 +93,13 @@ const options = [
                 children: [
                     {
                         value: 'tianhe',
-                        label: '天河区',
+                        label: '天河区'
                     },
                     {
                         value: 'haizhu',
-                        label: '海珠区',
-                    },
-                ],
+                        label: '海珠区'
+                    }
+                ]
             },
             {
                 value: 'dongguan',
@@ -108,15 +107,15 @@ const options = [
                 children: [
                     {
                         value: 'changan',
-                        label: '长安镇',
+                        label: '长安镇'
                     },
                     {
                         value: 'humen',
-                        label: '虎门镇',
-                    },
-                ],
-            },
-        ],
+                        label: '虎门镇'
+                    }
+                ]
+            }
+        ]
     },
     {
         value: 'hunan',
@@ -128,15 +127,15 @@ const options = [
                 children: [
                     {
                         value: 'yuelu',
-                        label: '岳麓区',
-                    },
-                ],
-            },
-        ],
-    },
+                        label: '岳麓区'
+                    }
+                ]
+            }
+        ]
+    }
 ];
 const rules: FormRules = {
-    name: [{ required: true, message: '请输入表单名称', trigger: 'blur' }],
+    name: [{ required: true, message: '请输入表单名称', trigger: 'blur' }]
 };
 const formRef = ref<FormInstance>();
 const form = reactive({
@@ -152,27 +151,26 @@ const form = reactive({
     color: '',
     num: 1,
     rate: 0,
-    transfer: [],
-
+    transfer: []
 });
 const generateData = () => {
-    const data = []
+    const data = [];
     for (let i = 1; i <= 15; i++) {
         data.push({
             key: i,
             label: `Option ${i}`,
-            disabled: i % 4 === 0,
-        })
+            disabled: i % 4 === 0
+        });
     }
-    return data
-}
+    return data;
+};
 
-const transferData = ref(generateData())
+const transferData = ref(generateData());
 // 提交
 const onSubmit = (formEl: FormInstance | undefined) => {
     // 表单校验
     if (!formEl) return;
-    formEl.validate((valid) => {
+    formEl.validate(valid => {
         if (valid) {
             console.log(form);
             ElMessage.success('提交成功！');

@@ -1,8 +1,8 @@
 <template>
     <div>
         <el-tree
-            class="mgb10"
             ref="tree"
+            class="mgb10"
             :data="data"
             node-key="id"
             default-expand-all
@@ -21,8 +21,8 @@ import { menuData } from '@/components/menu';
 const props = defineProps({
     permissOptions: {
         type: Object,
-        required: true,
-    },
+        required: true
+    }
 });
 
 const menuObj = ref({});
@@ -42,14 +42,14 @@ const menuObj = ref({});
 //     };
 // });
 
-const getTreeData = (data) => {
-    return data.map((item) => {
+const getTreeData = data => {
+    return data.map(item => {
         const obj: any = {
             id: item.id,
-            label: item.title,
+            label: item.title
         };
         if (item.children) {
-            menuObj.value[item.id] = item.children.map((sub) => sub.id);
+            menuObj.value[item.id] = item.children.map(sub => sub.id);
             obj.children = getTreeData(item.children);
         }
         return obj;
@@ -57,7 +57,7 @@ const getTreeData = (data) => {
 };
 const data = getTreeData(menuData);
 const checkData = (data: string[]) => {
-    return data.filter((item) => {
+    return data.filter(item => {
         return !menuObj.value[item] || data.toString().includes(menuObj.value[item].toString());
     });
 };

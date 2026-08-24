@@ -1,17 +1,17 @@
 <template>
     <div class="container">
-        <div class="step-div" v-if="step === 0">
+        <div v-if="step === 0" class="step-div">
             <p>输入注册时的邮箱，我们会发送验证码到您的邮箱</p>
             <el-input placeholder="请输入邮箱"></el-input>
             <el-button class="step-btn" type="primary" @click="step++">下一步</el-button>
         </div>
-        <div class="step-div" v-else-if="step === 1">
+        <div v-else-if="step === 1" class="step-div">
             <p>验证码已发送至您的邮箱，请输入验证码</p>
             <el-input placeholder="请输入验证码"></el-input>
             <el-button class="step-btn" type="primary" @click="step++">下一步</el-button>
         </div>
 
-        <div class="step-div" v-else-if="step === 2">
+        <div v-else-if="step === 2" class="step-div">
             <p>请输入6位以上密码</p>
             <el-input placeholder="请输入新密码"></el-input>
             <el-button class="step-btn" type="primary" @click="step++">保存</el-button>
@@ -34,7 +34,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-const step = ref(0)
+const step = ref(0);
 </script>
 
 <style scoped>

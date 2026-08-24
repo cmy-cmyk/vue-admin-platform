@@ -5,13 +5,13 @@
                 <el-button @click="expandAll = !expandAll">{{ expandAll ? '全部折叠' : '全部展开' }}</el-button>
             </div>
             <div class="header-right">
-                <el-button type="primary" v-permiss="'menu:add'" @click="openCreate(0)">+ 新增顶级菜单</el-button>
+                <el-button v-permiss="'menu:add'" type="primary" @click="openCreate(0)">+ 新增顶级菜单</el-button>
             </div>
         </div>
 
         <el-table
-            :data="menuTree"
             v-loading="loading"
+            :data="menuTree"
             row-key="id"
             border
             :default-expand-all="expandAll"
@@ -43,29 +43,24 @@
             <el-table-column label="操作" width="220" fixed="right">
                 <template #default="{ row }">
                     <el-button
-                        size="small"
                         v-permiss="'menu:add'"
+                        size="small"
                         :disabled="row.menu_type === 2"
                         @click="openCreate(row.id)"
-                    >新增子级</el-button>
-                    <el-button size="small" v-permiss="'menu:edit'" @click="openEdit(row)">编辑</el-button>
-                    <el-button
-                        size="small"
-                        type="danger"
-                        v-permiss="'menu:delete'"
-                        @click="handleDelete(row)"
-                    >删除</el-button>
+                    >
+                        新增子级
+                    </el-button>
+                    <el-button v-permiss="'menu:edit'" size="small" @click="openEdit(row)">编辑</el-button>
+                    <el-button v-permiss="'menu:delete'" size="small" type="danger" @click="handleDelete(row)">
+                        删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <!-- 新增/编辑弹窗 -->
-        <el-dialog
-            v-model="formDialog.visible"
-            :title="formDialog.isEdit ? '编辑菜单' : '新增菜单'"
-            width="600px"
-        >
-            <el-form :model="formDialog.form" label-width="100px" :rules="formRules" ref="formRef">
+        <el-dialog v-model="formDialog.visible" :title="formDialog.isEdit ? '编辑菜单' : '新增菜单'" width="600px">
+            <el-form ref="formRef" :model="formDialog.form" label-width="100px" :rules="formRules">
                 <el-form-item label="上级菜单">
                     <el-tree-select
                         v-model="formDialog.form.parent_id"
@@ -91,7 +86,10 @@
                     <el-input v-model="formDialog.form.path" placeholder="如 /system-user" />
                 </el-form-item>
                 <el-form-item v-if="formDialog.form.menu_type === 1" label="组件路径" prop="component">
-                    <el-input v-model="formDialog.form.component" placeholder="如 system/user(对应 src/views/system/user.vue)" />
+                    <el-input
+                        v-model="formDialog.form.component"
+                        placeholder="如 system/user(对应 src/views/system/user.vue)"
+                    />
                 </el-form-item>
                 <el-form-item v-if="formDialog.form.menu_type !== 0" label="权限标识">
                     <el-input v-model="formDialog.form.permiss" placeholder="如 user:add" />
@@ -137,7 +135,7 @@ import {
     updateMenuApi,
     deleteMenuApi,
     type MenuItem,
-    type MenuTreeNodePlus,
+    type MenuTreeNodePlus
 } from '@/api/menu';
 
 // 图标列表(从 @element-plus/icons-vue 自动收集)
@@ -161,10 +159,10 @@ const fetchData = async () => {
 const parentOptions = computed(() => {
     const filterNode = (nodes: MenuTreeNodePlus[]): MenuTreeNodePlus[] => {
         return nodes
-            .filter((n) => n.menu_type !== 2)
-            .map((n) => ({
+            .filter(n => n.menu_type !== 2)
+            .map(n => ({
                 ...n,
-                children: n.children ? filterNode(n.children) : undefined,
+                children: n.children ? filterNode(n.children) : undefined
             }));
     };
     return filterNode(menuTree.value);
@@ -203,8 +201,8 @@ const formDialog = reactive<{
         icon: '',
         permiss: '',
         sort: 0,
-        visible: 1,
-    },
+        visible: 1
+    }
 });
 
 const formRules: FormRules = {
@@ -219,9 +217,9 @@ const formRules: FormRules = {
                     cb();
                 }
             },
-            trigger: 'blur',
-        },
-    ],
+            trigger: 'blur'
+        }
+    ]
 };
 
 const openCreate = (parentId: number) => {
@@ -238,7 +236,7 @@ const openCreate = (parentId: number) => {
         icon: '',
         permiss: '',
         sort: 0,
-        visible: 1,
+        visible: 1
     };
     formDialog.visible = true;
 };
@@ -252,7 +250,7 @@ const openEdit = (row: MenuItem) => {
 
 const handleSubmitForm = async () => {
     if (!formRef.value) return;
-    await formRef.value.validate(async (valid) => {
+    await formRef.value.validate(async valid => {
         if (!valid) return;
         formDialog.loading = true;
         try {

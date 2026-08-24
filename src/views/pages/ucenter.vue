@@ -11,11 +11,13 @@
                     <div class="info-desc">
                         <span>@admin</span>
                         <el-divider direction="vertical" />
-                        <el-link href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">vue-admin-platform</el-link>
+                        <el-link href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">
+                            vue-admin-platform
+                        </el-link>
                     </div>
                     <div class="info-desc">系统管理员</div>
                     <div class="info-icon">
-                        <a href="https://github.com/cmy-cmyk" target="_blank"> <i class="el-icon-lx-github-fill"></i></a>
+                        <a href="https://github.com/cmy-cmyk" target="_blank"><i class="el-icon-lx-github-fill"></i></a>
                         <i class="el-icon-lx-qq-fill"></i>
                         <i class="el-icon-lx-facebook-fill"></i>
                         <i class="el-icon-lx-twitter-fill"></i>
@@ -38,12 +40,12 @@
                 shadow="hover"
                 :body-style="{ padding: '20px 50px', height: '100%', boxSizing: 'border-box' }"
             >
-                <el-tabs tab-position="left" v-model="activeName">
+                <el-tabs v-model="activeName" tab-position="left">
                     <el-tab-pane name="label1" label="消息通知" class="user-tabpane">
                         <TabsComp />
                     </el-tab-pane>
                     <el-tab-pane name="label2" label="我的头像" class="user-tabpane">
-                        <div class="crop-wrap" v-if="activeName === 'label2'">
+                        <div v-if="activeName === 'label2'" class="crop-wrap">
                             <vueCropper
                                 ref="cropper"
                                 :img="imgSrc"
@@ -51,11 +53,10 @@
                                 :centerBox="true"
                                 :full="true"
                                 mode="contain"
-                            >
-                            </vueCropper>
+                            ></vueCropper>
                         </div>
-                        <el-button class="crop-demo-btn" type="primary"
-                            >选择图片
+                        <el-button class="crop-demo-btn" type="primary">
+                            选择图片
                             <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
                         </el-button>
                         <el-button type="success" @click="saveAvatar">上传并保存</el-button>
@@ -63,13 +64,13 @@
                     <el-tab-pane name="label3" label="修改密码" class="user-tabpane">
                         <el-form class="w500" label-position="top">
                             <el-form-item label="旧密码：">
-                                <el-input type="password" v-model="form.old"></el-input>
+                                <el-input v-model="form.old" type="password"></el-input>
                             </el-form-item>
                             <el-form-item label="新密码：">
-                                <el-input type="password" v-model="form.new"></el-input>
+                                <el-input v-model="form.new" type="password"></el-input>
                             </el-form-item>
                             <el-form-item label="确认新密码：">
-                                <el-input type="password" v-model="form.new1"></el-input>
+                                <el-input v-model="form.new1" type="password"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -79,7 +80,9 @@
                     <el-tab-pane name="label4" label="关于" class="user-tabpane">
                         <div class="plugins-tips">
                             本项目
-                            <el-link href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">vue-admin-platform</el-link>
+                            <el-link href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">
+                                vue-admin-platform
+                            </el-link>
                             基于 Vue 3 + TypeScript + Pinia + Element Plus 构建,作为企业级后台系统的快速交付基座。
                         </div>
                     </el-tab-pane>
@@ -100,7 +103,7 @@ const name = localStorage.getItem('vuems_name');
 const form = reactive({
     new1: '',
     new: '',
-    old: '',
+    old: ''
 });
 const onSubmit = () => {};
 
@@ -119,7 +122,7 @@ const setImage = (e: any) => {
     const reader = new FileReader();
     reader.onload = (event: any) => {
         imgSrc.value = event.target.result;
-        cropper.value && cropper.value.replace(event.target.result);
+        if (cropper.value) cropper.value.replace(event.target.result as string);
     };
     reader.readAsDataURL(file);
 };

@@ -2,8 +2,14 @@
     <div>
         <div class="container">
             <div class="handle-box">
-                <el-upload action="#" :limit="1" accept=".xlsx, .xls" :show-file-list="false"
-                    :before-upload="beforeUpload" :http-request="handleMany">
+                <el-upload
+                    action="#"
+                    :limit="1"
+                    accept=".xlsx, .xls"
+                    :show-file-list="false"
+                    :before-upload="beforeUpload"
+                    :http-request="handleMany"
+                >
                     <el-button class="mr10" type="success">批量导入</el-button>
                 </el-upload>
                 <el-link href="/template.xlsx" target="_blank">下载模板</el-link>
@@ -44,7 +50,7 @@ const getData = () => {
             sno: 'S001',
             class: '一班',
             age: '10',
-            sex: '男',
+            sex: '男'
         },
         {
             id: 2,
@@ -52,14 +58,14 @@ const getData = () => {
             sno: 'S002',
             class: '一班',
             age: '9',
-            sex: '女',
-        },
+            sex: '女'
+        }
     ];
 };
 getData();
 
 const importList = ref<any>([]);
-const beforeUpload: UploadProps['beforeUpload'] = async (rawFile) => {
+const beforeUpload: UploadProps['beforeUpload'] = async rawFile => {
     importList.value = await analysisExcel(rawFile);
     return true;
 };
@@ -69,7 +75,7 @@ const analysisExcel = (file: any) => {
         reader.onload = function (e: any) {
             const data = e.target.result;
             let datajson = XLSX.read(data, {
-                type: 'binary',
+                type: 'binary'
             });
 
             const sheetName = datajson.SheetNames[0];
@@ -89,7 +95,7 @@ const handleMany = async () => {
             sno: item['学号'],
             class: item['班级'],
             age: item['年龄'],
-            sex: item['性别'],
+            sex: item['性别']
         };
     });
     tableData.value.push(...list);

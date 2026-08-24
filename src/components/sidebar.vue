@@ -10,7 +10,7 @@
         >
             <template v-for="item in userStore.menus" :key="item.id">
                 <template v-if="item.children && item.children.length">
-                    <el-sub-menu :index="item.path || String(item.id)" v-permiss="item.permiss">
+                    <el-sub-menu v-permiss="item.permiss" :index="item.path || String(item.id)">
                         <template #title>
                             <el-icon v-if="item.icon">
                                 <component :is="item.icon"></component>
@@ -20,8 +20,8 @@
                         <template v-for="subItem in item.children" :key="subItem.id">
                             <el-sub-menu
                                 v-if="subItem.children && subItem.children.length"
-                                :index="subItem.path || String(subItem.id)"
                                 v-permiss="subItem.permiss"
+                                :index="subItem.path || String(subItem.id)"
                             >
                                 <template #title>{{ subItem.menu_name }}</template>
                                 <el-menu-item
@@ -32,18 +32,14 @@
                                     {{ threeItem.menu_name }}
                                 </el-menu-item>
                             </el-sub-menu>
-                            <el-menu-item
-                                v-else
-                                :index="subItem.path"
-                                v-permiss="subItem.permiss"
-                            >
+                            <el-menu-item v-else v-permiss="subItem.permiss" :index="subItem.path">
                                 {{ subItem.menu_name }}
                             </el-menu-item>
                         </template>
                     </el-sub-menu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.path" v-permiss="item.permiss">
+                    <el-menu-item v-permiss="item.permiss" :index="item.path">
                         <el-icon v-if="item.icon">
                             <component :is="item.icon"></component>
                         </el-icon>

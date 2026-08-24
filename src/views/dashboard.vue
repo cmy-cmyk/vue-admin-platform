@@ -103,7 +103,7 @@
                         <p class="card-header-desc">销售商品的热门榜单Top5</p>
                     </div>
                     <div>
-                        <div class="rank-item" v-for="(rank, index) in ranks">
+                        <div v-for="(rank, index) in ranks" class="rank-item">
                             <div class="rank-item-avatar">{{ index + 1 }}</div>
                             <div class="rank-item-content">
                                 <div class="rank-item-top">
@@ -135,7 +135,7 @@ import {
     TooltipComponent,
     LegendComponent,
     TitleComponent,
-    VisualMapComponent,
+    VisualMapComponent
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from 'vue-echarts';
@@ -151,7 +151,7 @@ use([
     LegendComponent,
     TitleComponent,
     VisualMapComponent,
-    MapChart,
+    MapChart
 ]);
 registerMap('china', chinaMap);
 const activities = [
@@ -159,32 +159,32 @@ const activities = [
         content: '收藏商品',
         description: '用户 ID 1024 收藏了商品 SKU-2024',
         timestamp: '30分钟前',
-        color: '#00bcd4',
+        color: '#00bcd4'
     },
     {
         content: '用户评价',
         description: '订单 20240820001 收到一条 3 星评价',
         timestamp: '55分钟前',
-        color: '#1ABC9C',
+        color: '#1ABC9C'
     },
     {
         content: '订单提交',
         description: '订单 20240820002 已提交待支付',
         timestamp: '1小时前',
-        color: '#3f51b5',
+        color: '#3f51b5'
     },
     {
         content: '退款申请',
         description: '订单 20240819088 申请仅退款,待审核',
         timestamp: '15小时前',
-        color: '#f44336',
+        color: '#f44336'
     },
     {
         content: '商品上架',
         description: '运营专员上架了 12 个新 SKU',
         timestamp: '1天前',
-        color: '#009688',
-    },
+        color: '#009688'
+    }
 ];
 
 const ranks = [
@@ -192,32 +192,32 @@ const ranks = [
         title: '手机',
         value: 10000,
         percent: 80,
-        color: '#f25e43',
+        color: '#f25e43'
     },
     {
         title: '电脑',
         value: 8000,
         percent: 70,
-        color: '#00bcd4',
+        color: '#00bcd4'
     },
     {
         title: '相机',
         value: 6000,
         percent: 60,
-        color: '#64d572',
+        color: '#64d572'
     },
     {
         title: '衣服',
         value: 5000,
         percent: 55,
-        color: '#e9a745',
+        color: '#e9a745'
     },
     {
         title: '书籍',
         value: 4000,
         percent: 50,
-        color: '#009688',
-    },
+        color: '#009688'
+    }
 ];
 </script>
 

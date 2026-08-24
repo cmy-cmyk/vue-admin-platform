@@ -11,40 +11,40 @@ const staticRoutes: RouteRecordRaw[] = [
     {
         path: '/login',
         meta: { title: '登录', noAuth: true },
-        component: () => import('../views/pages/login.vue'),
+        component: () => import('../views/pages/login.vue')
     },
     {
         path: '/register',
         meta: { title: '注册', noAuth: true },
-        component: () => import('../views/pages/register.vue'),
+        component: () => import('../views/pages/register.vue')
     },
     {
         path: '/reset-pwd',
         meta: { title: '重置密码', noAuth: true },
-        component: () => import('../views/pages/reset-pwd.vue'),
+        component: () => import('../views/pages/reset-pwd.vue')
     },
     {
         path: '/403',
         meta: { title: '没有权限', noAuth: true },
-        component: () => import('../views/pages/403.vue'),
+        component: () => import('../views/pages/403.vue')
     },
     {
         path: '/404',
         meta: { title: '找不到页面', noAuth: true },
-        component: () => import('../views/pages/404.vue'),
+        component: () => import('../views/pages/404.vue')
     },
     {
         // Home 是布局容器,业务子路由全部动态注册到它的 children
         path: '/',
         name: 'Home',
         component: Home,
-        children: [],
-    },
+        children: []
+    }
 ];
 
 const router = createRouter({
     history: createWebHashHistory(),
-    routes: staticRoutes,
+    routes: staticRoutes
 });
 
 // ========== 动态路由注册工具 ==========
@@ -60,17 +60,17 @@ function getComponent(componentPath: string) {
 // 递归把后端返回的菜单树转成路由树,挂到 Home 下
 function buildDynamicRoutes(menus: any[]): RouteRecordRaw[] {
     return menus
-        .filter((m) => m.menu_type !== 2) // 按钮不算路由
-        .map((m) => {
+        .filter(m => m.menu_type !== 2) // 按钮不算路由
+        .map(m => {
             const route: RouteRecordRaw = {
                 path: m.path,
                 name: m.path,
                 meta: {
                     title: m.menu_name,
                     permiss: m.permiss || '',
-                    icon: m.icon || '',
+                    icon: m.icon || ''
                 },
-                component: m.component ? getComponent(m.component) : undefined,
+                component: m.component ? getComponent(m.component) : undefined
             };
             if (m.children && m.children.length > 0) {
                 route.children = buildDynamicRoutes(m.children);
@@ -81,7 +81,7 @@ function buildDynamicRoutes(menus: any[]): RouteRecordRaw[] {
 
 function addDynamicRoutes(menus: any[]) {
     const routes = buildDynamicRoutes(menus);
-    routes.forEach((r) => {
+    routes.forEach(r => {
         // 全部挂到 Home 下作为 children
         router.addRoute('Home', r);
     });

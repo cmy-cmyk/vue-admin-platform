@@ -5,7 +5,7 @@
                 <img class="logo mr10" src="../../assets/img/logo.svg" alt="" />
                 <div class="login-title">后台管理系统</div>
             </div>
-            <el-form :model="param" :rules="rules" ref="login" size="large">
+            <el-form ref="login" :model="param" :rules="rules" size="large">
                 <el-form-item prop="username">
                     <el-input v-model="param.username" placeholder="用户名">
                         <template #prepend>
@@ -17,9 +17,9 @@
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input
+                        v-model="param.password"
                         type="password"
                         placeholder="密码"
-                        v-model="param.password"
                         @keyup.enter="submitForm(login)"
                     >
                         <template #prepend>
@@ -30,13 +30,16 @@
                     </el-input>
                 </el-form-item>
                 <div class="pwd-tips">
-                    <el-checkbox class="pwd-checkbox" v-model="checked" label="记住密码" />
+                    <el-checkbox v-model="checked" class="pwd-checkbox" label="记住密码" />
                     <el-link type="primary" @click="$router.push('/reset-pwd')">忘记密码</el-link>
                 </div>
-                <el-button class="login-btn" type="primary" size="large" :loading="loading" @click="submitForm(login)">登录</el-button>
+                <el-button class="login-btn" type="primary" size="large" :loading="loading" @click="submitForm(login)">
+                    登录
+                </el-button>
                 <p class="login-tips">Tips : 演示账号 admin / 123456 或 user / 123456</p>
                 <p class="login-text">
-                    没有账号？<el-link type="primary" @click="$router.push('/register')">立即注册</el-link>
+                    没有账号？
+                    <el-link type="primary" @click="$router.push('/register')">立即注册</el-link>
                 </p>
             </el-form>
         </div>
@@ -64,7 +67,7 @@ const router = useRouter();
 const route = useRoute();
 const param = reactive<LoginInfo>({
     username: defParam ? defParam.username : 'admin',
-    password: defParam ? defParam.password : '123456',
+    password: defParam ? defParam.password : '123456'
 });
 
 const rules: FormRules = {
@@ -72,10 +75,10 @@ const rules: FormRules = {
         {
             required: true,
             message: '请输入用户名',
-            trigger: 'blur',
-        },
+            trigger: 'blur'
+        }
     ],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+    password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 };
 const userStore = useUserStore();
 const login = ref<FormInstance>();

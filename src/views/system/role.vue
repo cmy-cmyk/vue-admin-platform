@@ -13,11 +13,11 @@
                 <el-button @click="handleReset">重置</el-button>
             </div>
             <div class="header-right">
-                <el-button type="primary" v-permiss="'role:add'" @click="openCreate">+ 新增角色</el-button>
+                <el-button v-permiss="'role:add'" type="primary" @click="openCreate">+ 新增角色</el-button>
             </div>
         </div>
 
-        <el-table :data="tableData" v-loading="loading" border style="width: 100%">
+        <el-table v-loading="loading" :data="tableData" border style="width: 100%">
             <el-table-column prop="id" label="ID" width="60" />
             <el-table-column prop="role_name" label="角色名" width="140" />
             <el-table-column prop="role_key" label="标识" width="120" />
@@ -32,15 +32,17 @@
             <el-table-column prop="created_at" label="创建时间" width="170" />
             <el-table-column label="操作" width="260" fixed="right">
                 <template #default="{ row }">
-                    <el-button size="small" v-permiss="'role:edit'" @click="openEdit(row)">编辑</el-button>
+                    <el-button v-permiss="'role:edit'" size="small" @click="openEdit(row)">编辑</el-button>
                     <el-button size="small" type="success" @click="openPermission(row)">分配权限</el-button>
                     <el-button
+                        v-permiss="'role:delete'"
                         size="small"
                         type="danger"
-                        v-permiss="'role:delete'"
                         :disabled="row.id === 1"
                         @click="handleDelete(row)"
-                    >删除</el-button>
+                    >
+                        删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -58,12 +60,8 @@
         </div>
 
         <!-- 新增/编辑弹窗 -->
-        <el-dialog
-            v-model="formDialog.visible"
-            :title="formDialog.isEdit ? '编辑角色' : '新增角色'"
-            width="480px"
-        >
-            <el-form :model="formDialog.form" label-width="80px" :rules="formRules" ref="formRef">
+        <el-dialog v-model="formDialog.visible" :title="formDialog.isEdit ? '编辑角色' : '新增角色'" width="480px">
+            <el-form ref="formRef" :model="formDialog.form" label-width="80px" :rules="formRules">
                 <el-form-item label="角色名" prop="role_name">
                     <el-input v-model="formDialog.form.role_name" placeholder="如:运营专员" />
                 </el-form-item>
@@ -97,9 +95,7 @@
                 default-expand-all
                 :props="{ label: 'menu_name', children: 'children' }"
             />
-            <div class="perm-tips">
-                勾选父节点会自动勾选所有子节点;保存时同时记录半选父节点,确保回显正确。
-            </div>
+            <div class="perm-tips">勾选父节点会自动勾选所有子节点;保存时同时记录半选父节点,确保回显正确。</div>
             <template #footer>
                 <el-button @click="permDialog.visible = false">取消</el-button>
                 <el-button type="primary" :loading="permDialog.loading" @click="handleSubmitPermission">保存</el-button>
@@ -119,7 +115,7 @@ import {
     deleteRoleApi,
     getRoleMenusApi,
     assignRoleMenusApi,
-    type RoleItem,
+    type RoleItem
 } from '@/api/role';
 import { getMenuListApi, type MenuItem } from '@/api/menu';
 
@@ -130,7 +126,7 @@ const total = ref(0);
 const query = reactive({
     page: 1,
     pageSize: 10,
-    keyword: '',
+    keyword: ''
 });
 
 const fetchData = async () => {
@@ -177,12 +173,12 @@ const formDialog = reactive<{
     isEdit: false,
     loading: false,
     editId: null,
-    form: { role_name: '', role_key: '', remark: '', status: 1 },
+    form: { role_name: '', role_key: '', remark: '', status: 1 }
 });
 
 const formRules: FormRules = {
     role_name: [{ required: true, message: '请输入角色名', trigger: 'blur' }],
-    role_key: [{ required: true, message: '请输入标识', trigger: 'blur' }],
+    role_key: [{ required: true, message: '请输入标识', trigger: 'blur' }]
 };
 
 const openCreate = () => {
@@ -199,14 +195,14 @@ const openEdit = (row: RoleItem) => {
         role_name: row.role_name,
         role_key: row.role_key,
         remark: row.remark,
-        status: row.status,
+        status: row.status
     };
     formDialog.visible = true;
 };
 
 const handleSubmitForm = async () => {
     if (!formRef.value) return;
-    await formRef.value.validate(async (valid) => {
+    await formRef.value.validate(async valid => {
         if (!valid) return;
         formDialog.loading = true;
         try {
@@ -232,17 +228,17 @@ const menuTree = ref<TreeNode[]>([]);
 const permDialog = reactive<{ visible: boolean; loading: boolean; roleId: number | null }>({
     visible: false,
     loading: false,
-    roleId: null,
+    roleId: null
 });
 
 // 把扁平菜单构造成树
 const buildTree = (list: MenuItem[], parentId = 0): TreeNode[] => {
     return list
-        .filter((m) => m.parent_id === parentId)
+        .filter(m => m.parent_id === parentId)
         .sort((a, b) => a.sort - b.sort)
-        .map((m) => ({
+        .map(m => ({
             ...m,
-            children: buildTree(list, m.id).length ? buildTree(list, m.id) : undefined,
+            children: buildTree(list, m.id).length ? buildTree(list, m.id) : undefined
         }));
 };
 
@@ -272,7 +268,7 @@ const openPermission = async (row: RoleItem) => {
         return ids;
     };
     const allLeafIds = new Set(collectLeafIds(menuTree.value));
-    const leafChecked = checkedIds.filter((id) => allLeafIds.has(id));
+    const leafChecked = checkedIds.filter(id => allLeafIds.has(id));
 
     setTimeout(() => {
         treeRef.value?.setCheckedKeys(leafChecked);

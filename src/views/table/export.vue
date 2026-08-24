@@ -39,7 +39,7 @@ const getData = () => {
             sno: 'S001',
             class: '一班',
             age: '10',
-            sex: '男',
+            sex: '男'
         },
         {
             id: 2,
@@ -47,8 +47,8 @@ const getData = () => {
             sno: 'S002',
             class: '一班',
             age: '9',
-            sex: '女',
-        },
+            sex: '女'
+        }
     ];
 };
 getData();

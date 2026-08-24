@@ -28,7 +28,7 @@
                     >
                         <i class="el-icon-lx-notice"></i>
                     </el-tooltip>
-                    <span class="btn-bell-badge" v-if="message"></span>
+                    <span v-if="message" class="btn-bell-badge"></span>
                 </div>
                 <div class="btn-icon" @click="setFullScreen">
                     <el-tooltip effect="dark" content="全屏" placement="bottom">

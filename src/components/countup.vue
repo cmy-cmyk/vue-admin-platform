@@ -9,13 +9,13 @@ import { CountUp } from 'countup.js';
 const props = defineProps({
     end: {
         type: Number,
-        required: true,
+        required: true
     },
     options: {
         type: Object,
         default: () => ({}),
-        required: false,
-    },
+        required: false
+    }
 });
 
 const countRef = ref<any>(null);
@@ -29,11 +29,12 @@ onMounted(() => {
     countUp.start();
 });
 
-watch(() => props.end, (newVal) => {
-    if (countUp) {
-        countUp.update(newVal);
+watch(
+    () => props.end,
+    newVal => {
+        if (countUp) {
+            countUp.update(newVal);
+        }
     }
-});
-
-
+);
 </script>

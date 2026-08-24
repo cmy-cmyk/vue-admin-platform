@@ -5,7 +5,7 @@
                 <img class="logo mr10" src="../../assets/img/logo.svg" alt="" />
                 <div class="login-title">后台管理系统</div>
             </div>
-            <el-form :model="param" :rules="rules" ref="register" size="large">
+            <el-form ref="register" :model="param" :rules="rules" size="large">
                 <el-form-item prop="username">
                     <el-input v-model="param.username" placeholder="用户名">
                         <template #prepend>
@@ -26,9 +26,9 @@
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input
+                        v-model="param.password"
                         type="password"
                         placeholder="密码"
-                        v-model="param.password"
                         @keyup.enter="submitForm(register)"
                     >
                         <template #prepend>
@@ -40,7 +40,8 @@
                 </el-form-item>
                 <el-button class="login-btn" type="primary" size="large" @click="submitForm(register)">注册</el-button>
                 <p class="login-text">
-                    已有账号，<el-link type="primary" @click="$router.push('/login')">立即登录</el-link>
+                    已有账号，
+                    <el-link type="primary" @click="$router.push('/login')">立即登录</el-link>
                 </p>
             </el-form>
         </div>
@@ -57,7 +58,7 @@ const router = useRouter();
 const param = reactive<Register>({
     username: '',
     password: '',
-    email: '',
+    email: ''
 });
 
 const rules: FormRules = {
@@ -65,11 +66,11 @@ const rules: FormRules = {
         {
             required: true,
             message: '请输入用户名',
-            trigger: 'blur',
-        },
+            trigger: 'blur'
+        }
     ],
     password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-    email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
+    email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }]
 };
 const register = ref<FormInstance>();
 const submitForm = (formEl: FormInstance | undefined) => {

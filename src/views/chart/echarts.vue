@@ -51,7 +51,7 @@ import {
     TooltipComponent,
     LegendComponent,
     TitleComponent,
-    VisualMapComponent,
+    VisualMapComponent
 } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from 'vue-echarts';
@@ -68,7 +68,7 @@ use([
     TooltipComponent,
     LegendComponent,
     TitleComponent,
-    VisualMapComponent,
+    VisualMapComponent
 ]);
 registerMap('china', chinaMap);
 </script>

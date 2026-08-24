@@ -3,7 +3,7 @@
         <div class="login-container">
             <div class="reset-title">重置密码</div>
             <p class="reset-text">输入你的邮箱，我们将发送重置密码邮件</p>
-            <el-form :model="param" :rules="rules" ref="register" size="large">
+            <el-form ref="register" :model="param" :rules="rules" size="large">
                 <el-form-item prop="email">
                     <el-input v-model="param.email" placeholder="邮箱">
                         <template #prepend>
@@ -13,9 +13,9 @@
                         </template>
                     </el-input>
                 </el-form-item>
-                <el-button class="login-btn" type="primary" size="large" @click="submitForm(register)"
-                    >发送邮件</el-button
-                >
+                <el-button class="login-btn" type="primary" size="large" @click="submitForm(register)">
+                    发送邮件
+                </el-button>
                 <p class="login-text"><el-link type="primary" @click="$router.push('/login')">返回登录</el-link></p>
             </el-form>
         </div>
@@ -27,7 +27,7 @@ import { ref } from 'vue';
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus';
 
 const param = ref({
-    email: '',
+    email: ''
 });
 
 const rules: FormRules = {
@@ -36,9 +36,9 @@ const rules: FormRules = {
         {
             pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
             message: '请输入正确的邮箱格式',
-            trigger: 'blur',
-        },
-    ],
+            trigger: 'blur'
+        }
+    ]
 };
 const register = ref<FormInstance>();
 const submitForm = (formEl: FormInstance | undefined) => {

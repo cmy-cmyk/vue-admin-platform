@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="table-toolbar" v-if="hasToolbar">
+        <div v-if="hasToolbar" class="table-toolbar">
             <div class="table-toolbar-left">
                 <slot name="toolbarBtn"></slot>
             </div>
@@ -35,16 +35,28 @@
                 </el-tooltip>
             </div>
         </div>
-        <el-table class="mgb20" :style="{ width: '100%' }" border :data="tableData" :row-key="rowKey"
-            @selection-change="handleSelectionChange" table-layout="auto">
+        <el-table
+            class="mgb20"
+            :style="{ width: '100%' }"
+            border
+            :data="tableData"
+            :row-key="rowKey"
+            table-layout="auto"
+            @selection-change="handleSelectionChange"
+        >
             <template v-for="item in columns" :key="item.prop">
-                <el-table-column v-if="item.visible" :prop="item.prop" :label="item.label" :width="item.width"
-                    :type="item.type" :align="item.align || 'center'">
-
-                    <template #default="{ row, column, $index }" v-if="item.type === 'index'">
+                <el-table-column
+                    v-if="item.visible"
+                    :prop="item.prop"
+                    :label="item.label"
+                    :width="item.width"
+                    :type="item.type"
+                    :align="item.align || 'center'"
+                >
+                    <template v-if="item.type === 'index'" #default="{ row, column, $index }">
                         {{ getIndex($index) }}
                     </template>
-                    <template #default="{ row, column, $index }" v-if="!item.type">
+                    <template v-if="!item.type" #default="{ row, column, $index }">
                         <slot :name="item.prop" :rows="row" :index="$index">
                             <template v-if="item.prop == 'operator'">
                                 <el-button type="warning" size="small" :icon="View" @click="viewFunc(row)">
@@ -68,13 +80,20 @@
                 </el-table-column>
             </template>
         </el-table>
-        <el-pagination v-if="hasPagination" :current-page="currentPage" :page-size="pageSize" :background="true"
-            :layout="layout" :total="total" @current-change="handleCurrentChange" />
+        <el-pagination
+            v-if="hasPagination"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :background="true"
+            :layout="layout"
+            :total="total"
+            @current-change="handleCurrentChange"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs, PropType, ref } from 'vue'
+import { toRefs, PropType, ref } from 'vue';
 import { Delete, Edit, View, Refresh } from '@element-plus/icons-vue';
 import { ElMessageBox } from 'element-plus';
 
@@ -120,73 +139,62 @@ const props = defineProps({
     },
     delFunc: {
         type: Function,
-        default: () => { }
+        default: () => {}
     },
     viewFunc: {
         type: Function,
-        default: () => { }
+        default: () => {}
     },
     editFunc: {
         type: Function,
-        default: () => { }
+        default: () => {}
     },
     delSelection: {
         type: Function,
-        default: () => { }
+        default: () => {}
     },
     refresh: {
         type: Function,
-        default: () => { }
+        default: () => {}
     },
     changePage: {
         type: Function,
-        default: () => { }
+        default: () => {}
     }
-})
+});
 
-let {
-    tableData,
-    columns,
-    rowKey,
-    hasToolbar,
-    hasPagination,
-    total,
-    currentPage,
-    pageSize,
-    layout,
-} = toRefs(props)
+let { tableData, columns, rowKey, hasToolbar, hasPagination, total, currentPage, pageSize, layout } = toRefs(props);
 
-columns.value.forEach((item) => {
+columns.value.forEach(item => {
     if (item.visible === undefined) {
-        item.visible = true
+        item.visible = true;
     }
-})
+});
 
 // 当选择项发生变化时会触发该事件
-const multipleSelection = ref([])
+const multipleSelection = ref([]);
 const handleSelectionChange = (selection: any[]) => {
-    multipleSelection.value = selection
-}
+    multipleSelection.value = selection;
+};
 
 // 当前页码变化的事件
 const handleCurrentChange = (val: number) => {
-    props.changePage(val)
-}
+    props.changePage(val);
+};
 
-const handleDelete = (row) => {
+const handleDelete = row => {
     ElMessageBox.confirm('确定要删除吗？', '提示', {
         type: 'warning'
     })
         .then(async () => {
             props.delFunc(row);
         })
-        .catch(() => { });
+        .catch(() => {});
 };
 
 const getIndex = (index: number) => {
-    return index + 1 + (currentPage.value - 1) * pageSize.value
-}
-
+    return index + 1 + (currentPage.value - 1) * pageSize.value;
+};
 </script>
 
 <style scoped>

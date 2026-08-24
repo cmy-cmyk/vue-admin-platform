@@ -40,19 +40,19 @@ const activePath = ref(route.fullPath);
 const tabs = useTabsStore();
 // 设置标签
 const setTags = (route: any) => {
-    const isExist = tabs.list.some((item) => {
+    const isExist = tabs.list.some(item => {
         return item.path === route.fullPath;
     });
     if (!isExist) {
         tabs.setTabsItem({
             name: route.name,
             title: route.meta.title,
-            path: route.fullPath,
+            path: route.fullPath
         });
     }
 };
 setTags(route);
-onBeforeRouteUpdate((to) => {
+onBeforeRouteUpdate(to => {
     setTags(to);
 });
 
@@ -63,7 +63,7 @@ const closeAll = () => {
 };
 // 关闭其他标签
 const closeOther = () => {
-    const curItem = tabs.list.filter((item) => {
+    const curItem = tabs.list.filter(item => {
         return item.path === route.fullPath;
     });
     tabs.closeTabsOther(curItem);
@@ -74,7 +74,7 @@ const handleTags = (command: string) => {
             // 关闭当前页面的标签页
             tabs.closeCurrentTag({
                 $router: router,
-                $route: route,
+                $route: route
             });
             break;
         case 'all':
@@ -91,7 +91,7 @@ const clickTabls = (item: any) => {
     router.push(item.props.name);
 };
 const closeTabs = (path: string) => {
-    const index = tabs.list.findIndex((item) => item.path === path);
+    const index = tabs.list.findIndex(item => item.path === path);
     tabs.delTabsItem(index);
     const item = tabs.list[index] || tabs.list[index - 1];
     router.push(item ? item.path : '/');

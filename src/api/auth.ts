@@ -49,7 +49,7 @@ export function loginApi(data: LoginParams) {
 // POST /auth/refresh
 export function refreshApi(refreshToken: string) {
     return request.post<any, ApiResponse<{ accessToken: string }>>('/auth/refresh', {
-        refreshToken,
+        refreshToken
     });
 }
 

@@ -1,9 +1,4 @@
-import axios, {
-    AxiosInstance,
-    AxiosError,
-    AxiosResponse,
-    InternalAxiosRequestConfig,
-} from 'axios';
+import axios, { AxiosInstance, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ElMessage } from 'element-plus';
 import router from '@/router';
 
@@ -32,13 +27,13 @@ export const tokenStorage = {
     clear() {
         localStorage.removeItem(ACCESS_TOKEN_KEY);
         localStorage.removeItem(REFRESH_TOKEN_KEY);
-    },
+    }
 };
 
 // ========== axios 实例 ==========
 const service: AxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-    timeout: 10000,
+    timeout: 10000
 });
 
 // ========== 请求拦截器:自动注入 Token ==========
@@ -60,7 +55,7 @@ let isRefreshing = false;
 let pendingQueue: Array<(token: string) => void> = []; // 等待新 token 的请求
 
 function onTokenRefreshed(newToken: string) {
-    pendingQueue.forEach((cb) => cb(newToken));
+    pendingQueue.forEach(cb => cb(newToken));
     pendingQueue = [];
 }
 
@@ -84,7 +79,7 @@ function redirectToLogin() {
     ElMessage.error('登录已过期,请重新登录');
     router.replace({
         path: '/login',
-        query: { redirect: router.currentRoute.value.fullPath },
+        query: { redirect: router.currentRoute.value.fullPath }
     });
 }
 
@@ -108,7 +103,7 @@ service.interceptors.response.use(
 
             // 已经在 refresh,挂起到队列
             if (isRefreshing) {
-                return new Promise((resolve) => {
+                return new Promise(resolve => {
                     pendingQueue.push((newToken: string) => {
                         if (originalConfig.headers) {
                             originalConfig.headers.Authorization = `Bearer ${newToken}`;

@@ -2,7 +2,6 @@ export interface FormOption {
     list: FormOptionList[];
     labelWidth?: number | string;
     span?: number;
-
 }
 
 export interface FormOptionList {

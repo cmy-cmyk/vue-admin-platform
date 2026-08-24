@@ -39,7 +39,7 @@ const imgs = [
     'https://cdn.pixabay.com/photo/2017/08/07/08/23/sea-2601374_640.jpg',
     'https://cdn.pixabay.com/photo/2020/02/11/10/24/lake-4839058_640.jpg',
     'https://cdn.pixabay.com/photo/2024/02/21/08/06/coast-8587004_640.jpg',
-    'https://cdn.pixabay.com/photo/2023/07/29/10/21/grasshopper-8156626_640.jpg',
+    'https://cdn.pixabay.com/photo/2023/07/29/10/21/grasshopper-8156626_640.jpg'
 ];
 </script>
 

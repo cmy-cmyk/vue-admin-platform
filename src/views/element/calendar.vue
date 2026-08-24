@@ -3,8 +3,8 @@
         <el-calendar v-model="value">
             <template #date-cell="{ data }">
                 <div>{{ data.date.getDate() }}</div>
-                <div class="notes-container" v-if="notes[data.day.toString()]">
-                    <div class="notes" v-for="note in notes[data.day.toString()]">
+                <div v-if="notes[data.day.toString()]" class="notes-container">
+                    <div v-for="note in notes[data.day.toString()]" class="notes">
                         <span :class="note.status === 1 ? 'text-success' : 'text-danger'"></span>
                         <div class="note-title">{{ note.title }}</div>
                     </div>
@@ -31,9 +31,9 @@ const notes: any = {
         { title: '吃饭', status: 1 },
         { title: '睡觉', status: 0 },
         { title: '吃饭', status: 1 },
-        { title: '睡觉', status: 0 },
+        { title: '睡觉', status: 0 }
     ],
-    [yesterdayDate]: [{ title: '参加会议', status: 0 }],
+    [yesterdayDate]: [{ title: '参加会议', status: 0 }]
 };
 </script>
 

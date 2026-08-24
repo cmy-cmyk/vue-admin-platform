@@ -2,8 +2,14 @@
     <div class="container">
         <el-row :gutter="20">
             <el-col :span="18">
-                <el-watermark :content="config.content" :font="config.font" :z-index="config.zIndex"
-                    :rotate="config.rotate" :gap="config.gap" :offset="config.offset">
+                <el-watermark
+                    :content="config.content"
+                    :font="config.font"
+                    :z-index="config.zIndex"
+                    :rotate="config.rotate"
+                    :gap="config.gap"
+                    :offset="config.offset"
+                >
                     <div style="height: 600px" />
                 </el-watermark>
             </el-col>
@@ -32,31 +38,36 @@
                     </el-form-item>
                     <el-form-item label="Offset">
                         <el-space>
-                            <el-input-number v-model="config.offset[0]" placeholder="offsetLeft"
-                                controls-position="right" />
-                            <el-input-number v-model="config.offset[1]" placeholder="offsetTop"
-                                controls-position="right" />
+                            <el-input-number
+                                v-model="config.offset[0]"
+                                placeholder="offsetLeft"
+                                controls-position="right"
+                            />
+                            <el-input-number
+                                v-model="config.offset[1]"
+                                placeholder="offsetTop"
+                                controls-position="right"
+                            />
                         </el-space>
                     </el-form-item>
                 </el-form>
             </el-col>
         </el-row>
-
     </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive } from 'vue';
 
 const config = reactive({
     content: 'vue-manage-system',
     font: {
         fontSize: 16,
-        color: 'rgba(0, 0, 0, 0.15)',
+        color: 'rgba(0, 0, 0, 0.15)'
     },
     zIndex: -1,
     rotate: -22,
     gap: [100, 100] as [number, number],
-    offset: [] as unknown as [number, number],
-})
+    offset: [] as unknown as [number, number]
+});
 </script>

@@ -21,3 +21,12 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Build & cache
+.eslintcache
+.cache
+*.local
+
+# Bundle visualizer report
+stats.html
+

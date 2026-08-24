@@ -37,7 +37,7 @@ app.directive('permiss', {
         } else {
             el.style.display = '';
         }
-    },
+    }
 });
 
 app.mount('#app');

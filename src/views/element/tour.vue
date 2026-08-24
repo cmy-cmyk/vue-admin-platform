@@ -22,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { MoreFilled } from '@element-plus/icons-vue'
+import { ref } from 'vue';
+import { MoreFilled } from '@element-plus/icons-vue';
 
-const ref1 = ref()
-const ref2 = ref()
-const ref3 = ref()
+const ref1 = ref();
+const ref2 = ref();
+const ref3 = ref();
 
-const open = ref(false)
+const open = ref(false);
 </script>

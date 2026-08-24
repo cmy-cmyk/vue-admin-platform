@@ -14,22 +14,20 @@
                 <el-button @click="handleReset">重置</el-button>
             </div>
             <div class="header-right">
-                <el-button type="primary" v-permiss="'user:add'" @click="openCreate">+ 新增用户</el-button>
-                <el-button
-                    type="danger"
-                    :disabled="selectedIds.length === 0"
-                    @click="handleBatchDelete"
-                >批量删除</el-button>
+                <el-button v-permiss="'user:add'" type="primary" @click="openCreate">+ 新增用户</el-button>
+                <el-button type="danger" :disabled="selectedIds.length === 0" @click="handleBatchDelete">
+                    批量删除
+                </el-button>
             </div>
         </div>
 
         <!-- 表格 -->
         <el-table
-            :data="tableData"
             v-loading="loading"
+            :data="tableData"
             border
-            @selection-change="handleSelectionChange"
             style="width: 100%"
+            @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" width="50" />
             <el-table-column prop="id" label="ID" width="60" />
@@ -37,13 +35,9 @@
             <el-table-column prop="nickname" label="昵称" width="120" />
             <el-table-column label="角色" min-width="180">
                 <template #default="{ row }">
-                    <el-tag
-                        v-for="r in row.roles"
-                        :key="r.id"
-                        size="small"
-                        type="info"
-                        style="margin-right: 4px"
-                    >{{ r.role_name }}</el-tag>
+                    <el-tag v-for="r in row.roles" :key="r.id" size="small" type="info" style="margin-right: 4px">
+                        {{ r.role_name }}
+                    </el-tag>
                     <span v-if="!row.roles || row.roles.length === 0" class="text-muted">未分配</span>
                 </template>
             </el-table-column>
@@ -52,23 +46,25 @@
                 <template #default="{ row }">
                     <el-switch
                         :model-value="row.status === 1"
-                        @change="(val) => handleToggleStatus(row, val as boolean)"
+                        @change="val => handleToggleStatus(row, val as boolean)"
                     />
                 </template>
             </el-table-column>
             <el-table-column prop="created_at" label="创建时间" width="170" />
             <el-table-column label="操作" width="280" fixed="right">
                 <template #default="{ row }">
-                    <el-button size="small" v-permiss="'user:edit'" @click="openEdit(row)">编辑</el-button>
+                    <el-button v-permiss="'user:edit'" size="small" @click="openEdit(row)">编辑</el-button>
                     <el-button size="small" @click="openAssignRoles(row)">分配角色</el-button>
                     <el-button size="small" type="warning" @click="openResetPwd(row)">重置密码</el-button>
                     <el-button
+                        v-permiss="'user:delete'"
                         size="small"
                         type="danger"
-                        v-permiss="'user:delete'"
                         :disabled="row.id === 1"
                         @click="handleDelete(row)"
-                    >删除</el-button>
+                    >
+                        删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -87,12 +83,8 @@
         </div>
 
         <!-- 新增/编辑弹窗 -->
-        <el-dialog
-            v-model="formDialog.visible"
-            :title="formDialog.isEdit ? '编辑用户' : '新增用户'"
-            width="520px"
-        >
-            <el-form :model="formDialog.form" label-width="90px" :rules="formRules" ref="formRef">
+        <el-dialog v-model="formDialog.visible" :title="formDialog.isEdit ? '编辑用户' : '新增用户'" width="520px">
+            <el-form ref="formRef" :model="formDialog.form" label-width="90px" :rules="formRules">
                 <el-form-item label="用户名" prop="username">
                     <el-input
                         v-model="formDialog.form.username"
@@ -129,12 +121,7 @@
 
         <!-- 分配角色弹窗 -->
         <el-dialog v-model="rolesDialog.visible" title="分配角色" width="420px">
-            <el-select
-                v-model="rolesDialog.roleIds"
-                multiple
-                style="width: 100%"
-                placeholder="选择角色"
-            >
+            <el-select v-model="rolesDialog.roleIds" multiple style="width: 100%" placeholder="选择角色">
                 <el-option v-for="r in roleOptions" :key="r.id" :label="r.role_name" :value="r.id" />
             </el-select>
             <template #footer>
@@ -166,7 +153,7 @@ import {
     updateUserStatusApi,
     resetUserPasswordApi,
     assignUserRolesApi,
-    type UserItem,
+    type UserItem
 } from '@/api/user';
 import { getRoleListApi, type RoleItem } from '@/api/role';
 
@@ -179,7 +166,7 @@ const roleOptions = ref<RoleItem[]>([]);
 const query = reactive({
     page: 1,
     pageSize: 10,
-    keyword: '',
+    keyword: ''
 });
 
 const fetchData = async () => {
@@ -209,7 +196,7 @@ const handleReset = () => {
 };
 
 const handleSelectionChange = (rows: UserItem[]) => {
-    selectedIds.value = rows.map((r) => r.id);
+    selectedIds.value = rows.map(r => r.id);
 };
 
 const handleToggleStatus = async (row: UserItem, val: boolean) => {
@@ -249,18 +236,26 @@ const formDialog = reactive<{
     isEdit: boolean;
     loading: boolean;
     editId: number | null;
-    form: { username: string; password: string; nickname: string; email: string; phone: string; status: number; roleIds: number[] };
+    form: {
+        username: string;
+        password: string;
+        nickname: string;
+        email: string;
+        phone: string;
+        status: number;
+        roleIds: number[];
+    };
 }>({
     visible: false,
     isEdit: false,
     loading: false,
     editId: null,
-    form: { username: '', password: '', nickname: '', email: '', phone: '', status: 1, roleIds: [] },
+    form: { username: '', password: '', nickname: '', email: '', phone: '', status: 1, roleIds: [] }
 });
 
 const formRules: FormRules = {
     username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-    password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+    password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
 };
 
 const openCreate = () => {
@@ -280,14 +275,14 @@ const openEdit = (row: UserItem) => {
         email: row.email,
         phone: row.phone,
         status: row.status,
-        roleIds: [],
+        roleIds: []
     };
     formDialog.visible = true;
 };
 
 const handleSubmitForm = async () => {
     if (!formRef.value) return;
-    await formRef.value.validate(async (valid) => {
+    await formRef.value.validate(async valid => {
         if (!valid) return;
         formDialog.loading = true;
         try {
@@ -296,7 +291,7 @@ const handleSubmitForm = async () => {
                     nickname: formDialog.form.nickname,
                     email: formDialog.form.email,
                     phone: formDialog.form.phone,
-                    status: formDialog.form.status,
+                    status: formDialog.form.status
                 });
                 ElMessage.success('更新成功');
             } else {
@@ -307,7 +302,7 @@ const handleSubmitForm = async () => {
                     email: formDialog.form.email,
                     phone: formDialog.form.phone,
                     status: formDialog.form.status,
-                    roleIds: formDialog.form.roleIds,
+                    roleIds: formDialog.form.roleIds
                 });
                 ElMessage.success('创建成功');
             }
@@ -324,12 +319,12 @@ const rolesDialog = reactive<{ visible: boolean; loading: boolean; userId: numbe
     visible: false,
     loading: false,
     userId: null,
-    roleIds: [],
+    roleIds: []
 });
 
 const openAssignRoles = (row: UserItem) => {
     rolesDialog.userId = row.id;
-    rolesDialog.roleIds = (row.roles || []).map((r) => r.id);
+    rolesDialog.roleIds = (row.roles || []).map(r => r.id);
     rolesDialog.visible = true;
 };
 
@@ -351,7 +346,7 @@ const pwdDialog = reactive<{ visible: boolean; loading: boolean; userId: number 
     visible: false,
     loading: false,
     userId: null,
-    password: '',
+    password: ''
 });
 
 const openResetPwd = (row: UserItem) => {

@@ -7,8 +7,8 @@
         <div style="border: 1px solid #ccc; margin-bottom: 10px">
             <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :defaultConfig="toolbarConfig" />
             <Editor
-                style="height: 500px; overflow-y: hidden"
                 v-model="valueHtml"
+                style="height: 500px; overflow-y: hidden"
                 :defaultConfig="editorConfig"
                 @onCreated="handleCreated"
             />
