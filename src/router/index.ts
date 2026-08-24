@@ -96,7 +96,7 @@ function resetRouter() {
 // ========== 路由守卫 ==========
 router.beforeEach(async (to, from, next) => {
     NProgress.start();
-    document.title = (to.meta.title as string) ? `${to.meta.title} - Vue Admin Platform` : 'Vue Admin Platform';
+    document.title = (to.meta.title as string) ? `${to.meta.title} - FlowExpress` : 'FlowExpress · 流波';
 
     const userStore = useUserStore();
     const hasToken = !!localStorage.getItem('vap_access_token');

@@ -1,9 +1,9 @@
 {
-    "name": "vue-admin-platform",
+    "name": "flowexpress",
     "version": "1.0.0",
     "private": true,
     "type": "module",
-    "description": "基于 Vue 3 + TypeScript + Pinia + Element Plus 的中后台管理平台",
+    "description": "FlowExpress(流波):基于 Vue 3 + TypeScript + Pinia + Element Plus 的工单审批驱动中后台",
     "author": "Cmy <cmy20000303@163.com>",
     "license": "MIT",
     "repository": {

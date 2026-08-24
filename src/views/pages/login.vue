@@ -3,7 +3,7 @@
         <div class="login-container">
             <div class="login-header">
                 <img class="logo mr10" src="../../assets/img/logo.svg" alt="" />
-                <div class="login-title">后台管理系统</div>
+                <div class="login-title">FlowExpress · 流波</div>
             </div>
             <el-form ref="login" :model="param" :rules="rules" size="large">
                 <el-form-item prop="username">
