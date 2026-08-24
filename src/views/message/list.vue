@@ -88,12 +88,10 @@
                 </template>
             </el-table-column>
             <el-table-column prop="created_at" label="时间" width="180" />
-            <el-table-column label="操作" width="120" fixed="right">
+            <el-table-column label="操作" width="160" fixed="right">
                 <template #default="{ row }">
-                    <el-button v-if="!row.is_read" link type="primary" @click.stop="handleReadOne(row)">
-                        标为已读
-                    </el-button>
-                    <el-button v-if="row.ticket_id" link type="primary" @click.stop="goToTicket(row.ticket_id)">
+                    <el-button v-if="!row.is_read" size="small" @click.stop="handleReadOne(row)">标为已读</el-button>
+                    <el-button v-if="row.ticket_id" size="small" type="primary" @click.stop="goToTicket(row.ticket_id)">
                         查看工单
                     </el-button>
                 </template>
