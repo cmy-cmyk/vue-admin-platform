@@ -104,7 +104,7 @@ const themeStore = useThemeStore();
 const sidebar = useSidebarStore();
 
 const color = reactive({
-    primary: localStorage.getItem('theme-primary') || '#409eff',
+    primary: localStorage.getItem('theme-primary') || '#0f766e',
     success: localStorage.getItem('theme-success') || '#67c23a',
     warning: localStorage.getItem('theme-warning') || '#e6a23c',
     danger: localStorage.getItem('theme-danger') || '#f56c6c',

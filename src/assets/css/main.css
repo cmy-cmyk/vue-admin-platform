@@ -4,36 +4,221 @@
     outline: 0 !important;
 }
 
+/* ============================================================
+ * FlowExpress 全局样式 · 极简青绿风
+ * 主题色 #0F766E(深青绿,参考 Linear/Notion 调性)
+ * 中文字体栈优化(苹方 + 思源黑体 + 钉钉)
+ * 圆角 8px、阴影柔和、间距统一
+ * ============================================================ */
+:root {
+    /* === FlowExpress 品牌色 === */
+    --fe-primary: #0f766e; /* 主色:深青绿 */
+    --fe-primary-hover: #115e59; /* hover 态 */
+    --fe-primary-light: #ccfbf1; /* 浅色背景 */
+    --fe-primary-bg: #f0fdfa; /* 极浅背景 */
+
+    /* === 中性色 === */
+    --fe-text-primary: #18181b; /* 主文本 */
+    --fe-text-regular: #3f3f46; /* 常规文本 */
+    --fe-text-secondary: #71717a; /* 次要文本 */
+    --fe-text-placeholder: #a1a1aa; /* 占位文本 */
+    --fe-border: #e4e4e7; /* 边框 */
+    --fe-border-light: #f4f4f5; /* 浅边框/分割线 */
+    --fe-bg-page: #fafafa; /* 页面背景 */
+    --fe-bg-card: #ffffff; /* 卡片背景 */
+
+    /* === 圆角 === */
+    --fe-radius-sm: 6px;
+    --fe-radius: 8px;
+    --fe-radius-lg: 12px;
+
+    /* === 阴影 === */
+    --fe-shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+    --fe-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
+    --fe-shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+    --fe-shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
+
+    /* === 头部 / 侧栏 === */
+    --header-bg-color: #0f766e; /* 顶栏改为主色 */
+    --header-text-color: #ffffff;
+    --active-color: var(--fe-primary);
+
+    /* === 覆盖 Element Plus 主题变量 === */
+    --el-color-primary: #0f766e;
+    --el-color-primary-light-3: #2dd4bf;
+    --el-color-primary-light-5: #5eead4;
+    --el-color-primary-light-7: #99f6e4;
+    --el-color-primary-light-8: #ccfbf1;
+    --el-color-primary-light-9: #f0fdfa;
+    --el-color-primary-dark-2: #115e59;
+
+    /* 圆角 */
+    --el-border-radius-base: 8px;
+    --el-border-radius-small: 6px;
+    --el-border-radius-round: 12px;
+
+    /* 字体 */
+    --el-font-family:
+        'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans CN',
+        'Noto Sans CJK SC', 'Microsoft YaHei', 'DingTalk', sans-serif;
+
+    /* 文本颜色对齐中性色 */
+    --el-text-color-primary: #18181b;
+    --el-text-color-regular: #3f3f46;
+    --el-text-color-secondary: #71717a;
+    --el-text-color-placeholder: #a1a1aa;
+    --el-border-color: #e4e4e7;
+    --el-border-color-light: #f4f4f5;
+    --el-fill-color-blank: #ffffff;
+    --el-bg-color: #ffffff;
+    --el-bg-color-page: #fafafa;
+}
+
 body {
-    font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, 'microsoft yahei', arial, STHeiTi, sans-serif;
+    font-family: var(--el-font-family);
+    color: var(--fe-text-primary);
+    background: var(--fe-bg-page);
+    /* 字体渲染优化 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
 a {
     text-decoration: none;
+    color: var(--fe-primary);
+    transition: color 0.2s;
 }
+a:hover {
+    color: var(--fe-primary-hover);
+}
+
 i {
     font-style: normal;
 }
 
+/* === 容器:卡片化 === */
 .container {
-    padding: 30px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    padding: 24px;
+    background: var(--fe-bg-card);
+    border: 1px solid var(--fe-border);
+    border-radius: var(--fe-radius);
 }
 
-.el-table th {
-    background-color: #f5f7fa !important;
+/* === Element Plus 组件调性 === */
+
+/* 表格头 */
+.el-table {
+    --el-table-border-color: var(--fe-border);
+    --el-table-header-bg-color: var(--fe-bg-page);
+    --el-table-header-text-color: var(--fe-text-regular);
+    --el-table-row-hover-bg-color: var(--fe-primary-bg);
+}
+.el-table th.el-table__cell {
+    background-color: var(--fe-bg-page) !important;
+    font-weight: 600;
+    color: var(--fe-text-regular);
 }
 
+/* 卡片 */
+.el-card {
+    border-radius: var(--fe-radius);
+    border-color: var(--fe-border);
+    box-shadow: var(--fe-shadow-sm);
+}
+.el-card.is-hover-shadow:hover {
+    box-shadow: var(--fe-shadow-md);
+}
+
+/* 按钮 */
+.el-button {
+    border-radius: var(--fe-radius-sm);
+    font-weight: 500;
+}
+.el-button--primary {
+    --el-button-bg-color: var(--fe-primary);
+    --el-button-border-color: var(--fe-primary);
+    --el-button-hover-bg-color: var(--fe-primary-hover);
+    --el-button-hover-border-color: var(--fe-primary-hover);
+    --el-button-active-bg-color: var(--fe-primary-hover);
+    --el-button-active-border-color: var(--fe-primary-hover);
+}
+
+/* 输入框 */
+.el-input__wrapper {
+    border-radius: var(--fe-radius-sm);
+}
+.el-input__wrapper.is-focus {
+    box-shadow:
+        0 0 0 1px var(--fe-primary) inset,
+        0 0 0 3px var(--fe-primary-light) inset;
+}
+
+/* 标签 */
+.el-tag {
+    border-radius: var(--fe-radius-sm);
+    font-weight: 500;
+}
+
+/* 对话框 */
+.el-dialog {
+    border-radius: var(--fe-radius-lg);
+    overflow: hidden;
+}
+
+/* 分页 */
+.el-pagination .el-pager li {
+    border-radius: var(--fe-radius-sm);
+}
+
+/* 标签页 */
+.el-tabs__item.is-active {
+    color: var(--fe-primary);
+}
+.el-tabs__active-bar {
+    background-color: var(--fe-primary);
+}
+
+/* 时间线 */
+.el-timeline-item__node--primary {
+    background-color: var(--fe-primary);
+}
+
+/* 进度条 */
+.el-progress-bar__inner {
+    background-color: var(--fe-primary);
+}
+
+/* 滚动条优化(细节加分项) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #d4d4d8;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #a1a1aa;
+}
+
+/* === 工具类 === */
 .plugins-tips {
-    padding: 20px 10px;
+    padding: 16px 20px;
     margin-bottom: 20px;
-    background: #eef1f6;
+    background: var(--fe-primary-bg);
+    border: 1px solid var(--fe-primary-light);
+    border-radius: var(--fe-radius);
+    color: var(--fe-text-regular);
+    font-size: 14px;
 }
 
 .plugins-tips a {
-    color: var(--el-color-primary);
+    color: var(--fe-primary);
+    font-weight: 500;
 }
 
 .el-button + .el-tooltip {
@@ -52,7 +237,7 @@ i {
 
 .move-enter-active,
 .move-leave-active {
-    transition: opacity 0.1s ease;
+    transition: opacity 0.2s ease;
 }
 
 .move-enter-from,
@@ -77,10 +262,4 @@ i {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-:root {
-    --header-bg-color: #242f42;
-    --header-text-color: #fff;
-    --active-color: var(--el-color-primary);
 }

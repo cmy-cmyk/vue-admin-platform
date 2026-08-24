@@ -184,7 +184,7 @@ const trendOption = computed(() => ({
     tooltip: { trigger: 'axis' },
     legend: { data: ['创建数', '审批通过数'] },
     grid: { top: '8%', left: '2%', right: '3%', bottom: '2%', containLabel: true },
-    color: ['#009688', '#2d8cf0'],
+    color: ['#0f766e', '#0891b2'],
     xAxis: { type: 'category', boundaryGap: false, data: trendData.value.dates },
     yAxis: { type: 'value', minInterval: 1 },
     series: [
@@ -234,7 +234,7 @@ const priorityDist = ref<{ name: string; value: number }[]>([]);
 const priorityPieOption = computed(() => ({
     tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
     legend: { bottom: '2%', left: 'center' },
-    color: ['#909399', '#409eff', '#e6a23c', '#f56c6c'],
+    color: ['#909399', '#0f766e', '#e6a23c', '#f56c6c'],
     series: [
         {
             type: 'pie',
@@ -265,7 +265,7 @@ const fetchRecentLogs = async () => {
 // action -> 时间线颜色(语义化)
 const getActionColor = (action: string) => {
     const map: Record<string, string> = {
-        submit: '#409eff',
+        submit: '#0f766e',
         approve: '#67c23a',
         reject: '#f56c6c',
         withdraw: '#909399',
@@ -344,35 +344,35 @@ onMounted(() => {
 }
 
 .bg1 {
-    background: #2d8cf0;
+    background: #0f766e;
 }
 
 .bg2 {
-    background: #64d572;
+    background: #0891b2;
 }
 
 .bg3 {
-    background: #f25e43;
+    background: #16a34a;
 }
 
 .bg4 {
-    background: #e9a745;
+    background: #ea580c;
 }
 
 .color1 {
-    color: #2d8cf0;
+    color: #0f766e;
 }
 
 .color2 {
-    color: #64d572;
+    color: #0891b2;
 }
 
 .color3 {
-    color: #f25e43;
+    color: #16a34a;
 }
 
 .color4 {
-    color: #e9a745;
+    color: #ea580c;
 }
 
 .chart {

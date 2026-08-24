@@ -4,8 +4,9 @@ export const useSidebarStore = defineStore('sidebar', {
     state: () => {
         return {
             collapse: false,
-            bgColor: localStorage.getItem('sidebar-bg-color') || '#324157',
-            textColor: localStorage.getItem('sidebar-text-color') || '#bfcbd9'
+            // 默认侧栏色:与主题青绿协调的深石板色,比原 #324157 更柔和
+            bgColor: localStorage.getItem('sidebar-bg-color') || '#1f2937',
+            textColor: localStorage.getItem('sidebar-text-color') || '#d1d5db'
         };
     },
     getters: {},
