@@ -20,15 +20,20 @@
                         <i class="el-icon-lx-skin"></i>
                     </el-tooltip>
                 </div>
-                <div class="btn-icon" @click="router.push('/ucenter')">
+                <div class="btn-icon" @click="router.push('/message')">
                     <el-tooltip
                         effect="dark"
-                        :content="message ? `有${message}条未读消息` : `消息中心`"
+                        :content="messageStore.hasUnread ? `有${messageStore.unread.total}条未读消息` : `消息中心`"
                         placement="bottom"
                     >
                         <i class="el-icon-lx-notice"></i>
                     </el-tooltip>
-                    <span v-if="message" class="btn-bell-badge"></span>
+                    <span v-if="messageStore.hasUnread" class="btn-bell-badge">
+                        <span v-if="messageStore.unread.total < 99" class="btn-bell-num">
+                            {{ messageStore.unread.total }}
+                        </span>
+                        <span v-else class="btn-bell-num">99+</span>
+                    </span>
                 </div>
                 <div class="btn-icon" @click="setFullScreen">
                     <el-tooltip effect="dark" content="全屏" placement="bottom">
@@ -47,9 +52,6 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <a href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">
-                                <el-dropdown-item>项目仓库</el-dropdown-item>
-                            </a>
                             <el-dropdown-item command="user">个人中心</el-dropdown-item>
                             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
@@ -60,16 +62,17 @@
     </div>
 </template>
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, onBeforeUnmount, computed } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
 import { useUserStore } from '../store/user';
+import { useMessageStore } from '../store/message';
 import { useRouter } from 'vue-router';
 import { resetRouter } from '../router';
 import imgurl from '../assets/img/img.jpg';
 
 const userStore = useUserStore();
+const messageStore = useMessageStore();
 const username = computed(() => userStore.userInfo?.nickname || userStore.userInfo?.username || '游客');
-const message: number = 2;
 
 const sidebar = useSidebarStore();
 // 侧边栏折叠
@@ -77,10 +80,20 @@ const collapseChage = () => {
     sidebar.handleCollapse();
 };
 
+// 消息未读数轮询:登录后立即拉一次,之后每 30s 刷新
+// 轻量方案:HTTP 轮询;生产可换 SSE/WebSocket
+let pollTimer: ReturnType<typeof setInterval> | null = null;
 onMounted(() => {
     if (document.body.clientWidth < 1500) {
         collapseChage();
     }
+    if (userStore.isLoggedIn) {
+        messageStore.fetchUnread();
+        pollTimer = setInterval(() => messageStore.fetchUnread(), 30_000);
+    }
+});
+onBeforeUnmount(() => {
+    if (pollTimer) clearInterval(pollTimer);
 });
 
 // 用户名下拉菜单选择事件
@@ -179,13 +192,25 @@ const setFullScreen = () => {
 
 .btn-bell-badge {
     position: absolute;
-    right: 4px;
-    top: 0px;
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
+    right: -2px;
+    top: -2px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
     background: #f56c6c;
-    color: var(--header-text-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.btn-bell-num {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .user-avator {

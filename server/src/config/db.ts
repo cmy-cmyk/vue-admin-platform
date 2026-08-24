@@ -33,3 +33,16 @@ export async function queryOne<T = any>(sql: string, params: any[] = []): Promis
 export function exec(sql: string) {
   return db.exec(sql);
 }
+
+// 执行单条 UPDATE/INSERT/DELETE,返回 { changes, lastInsertRowid }
+// 用于需要知道"影响了几行"的场景(乐观锁判断、消息插入)
+export async function execute(sql: string, params: any[] = []): Promise<{ changes: number; lastInsertRowid: number }> {
+  const stmt = db.prepare(sql);
+  const result = stmt.run(...params) as { changes: number; lastInsertRowid: number | bigint };
+  return {
+    changes: result.changes,
+    lastInsertRowid: typeof result.lastInsertRowid === 'bigint'
+      ? Number(result.lastInsertRowid)
+      : result.lastInsertRowid,
+  };
+}

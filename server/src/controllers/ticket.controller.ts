@@ -6,6 +6,7 @@ import {
   canPerformAction,
   isTerminalStatus,
 } from '../services/ticket-fsm';
+import { notifyTicketAction } from './message.controller';
 import type {
   Ticket,
   TicketLogWithOperator,
@@ -216,7 +217,7 @@ export async function doTicketAction(req: Request, res: Response) {
 
   // 1. 查询工单当前状态
   const ticket = await queryOne<any>(
-    'SELECT id, status, creator_id, current_approver_id FROM ticket WHERE id = ?',
+    'SELECT id, title, status, creator_id, current_approver_id FROM ticket WHERE id = ?',
     [id]
   );
   if (!ticket) {
@@ -273,6 +274,29 @@ export async function doTicketAction(req: Request, res: Response) {
      VALUES (?, ?, ?, ?, ?, ?)`,
     [id, userId, action, fromStatus, toStatus, remark]
   );
+
+  // 7. 触发消息中心:按 action + toStatus 派发给审批人/发起人
+  //    try/catch 兜底,消息失败不阻断业务主流程(审计日志已落,可补)
+  try {
+    const operator = await queryOne<{ nickname: string }>(
+      'SELECT nickname FROM user WHERE id = ?',
+      [userId]
+    );
+    await notifyTicketAction({
+      ticketId: id,
+      ticketTitle: ticket.title,
+      creatorId: ticket.creator_id,
+      approverId: ticket.current_approver_id,
+      operatorId: userId,
+      operatorName: operator?.nickname || '系统',
+      action,
+      fromStatus,
+      toStatus,
+      remark,
+    });
+  } catch (e) {
+    console.error('[message] notifyTicketAction failed:', e);
+  }
 
   return success(res, { id, status: toStatus }, '操作成功');
 }

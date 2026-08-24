@@ -91,6 +91,26 @@ CREATE INDEX IF NOT EXISTS idx_ticket_creator ON ticket(creator_id);
 CREATE INDEX IF NOT EXISTS idx_ticket_approver ON ticket(current_approver_id);
 CREATE INDEX IF NOT EXISTS idx_ticket_log_ticket ON ticket_log(ticket_id);
 
+-- ===== 消息中心 =====
+-- 工单流转时同步写入,接收人 = 工单发起人 or 当前审批人
+-- type: todo 待办提醒 / notify 流转通知 / status 状态变更
+CREATE TABLE IF NOT EXISTS message (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id     INTEGER NOT NULL,                  -- 接收人
+  ticket_id   INTEGER,                           -- 关联工单(系统消息可为 NULL)
+  type        TEXT NOT NULL,                     -- todo / notify / status
+  title       TEXT NOT NULL,                     -- 消息标题
+  content     TEXT DEFAULT '',                   -- 消息正文
+  is_read     INTEGER DEFAULT 0,                 -- 0 未读 / 1 已读
+  created_at  TEXT DEFAULT (datetime('now')),
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (ticket_id) REFERENCES ticket(id)
+);
+
+-- 索引:加速"按用户 + 已读状态"查询(header 角标高频读)
+CREATE INDEX IF NOT EXISTS idx_message_user_read ON message(user_id, is_read);
+CREATE INDEX IF NOT EXISTS idx_message_user_type ON message(user_id, type);
+
 -- ===== 种子数据 =====
 -- 角色
 INSERT OR IGNORE INTO role (id, role_name, role_key, status, remark) VALUES
@@ -143,6 +163,14 @@ INSERT OR IGNORE INTO menu (id, parent_id, menu_name, menu_type, path, component
 -- 管理员 + 普通用户都能自定义主题
 INSERT OR IGNORE INTO role_menu (role_id, menu_id) VALUES
   (1, 20), (2, 20);
+
+-- ===== 消息中心菜单 =====
+INSERT OR IGNORE INTO menu (id, parent_id, menu_name, menu_type, path, component, icon, permiss, sort, visible) VALUES
+  (30, 0, '消息中心', 1, '/message', 'message/list', 'Bell', 'message:view', 4, 1);
+
+-- 所有登录用户都有消息中心
+INSERT OR IGNORE INTO role_menu (role_id, menu_id) VALUES
+  (1, 30), (2, 30);
 
 -- ===== 工单演示数据 =====
 -- 三条不同状态的工单,审批人都是 admin(id=1),发起人是 user(id=2)

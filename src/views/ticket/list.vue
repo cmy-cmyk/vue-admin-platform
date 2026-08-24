@@ -230,8 +230,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
 import { useUserStore } from '@/store/user';
+import { useMessageStore } from '@/store/message';
 import {
     getTicketListApi,
     getTicketDetailApi,
@@ -250,6 +252,7 @@ import {
 import { getUserListApi, type UserItem } from '@/api/user';
 
 const userStore = useUserStore();
+const messageStore = useMessageStore();
 const currentUserId = computed(() => userStore.userInfo?.id ?? 0);
 const isAdmin = computed(() => userStore.roles.includes('admin'));
 
@@ -432,6 +435,8 @@ async function handleAction(row: TicketItem, action: TicketAction) {
         await ticketActionApi(row.id, { action });
         ElMessage.success('操作成功');
         fetchData();
+        // 审批操作可能触发新消息(如给发起人发通知),刷新角标
+        messageStore.fetchUnread();
     } catch {
         // 用户取消或接口失败
     }
@@ -450,6 +455,8 @@ async function handleDetailAction(action: TicketAction) {
         const res = await getTicketDetailApi(detailData.value.id);
         detailData.value = res.data;
         fetchData();
+        // 审批操作会触发消息派发(给发起人/审批人),刷新 header 角标
+        messageStore.fetchUnread();
     } finally {
         actionForm.loading = false;
         actionForm.currentAction = undefined;
@@ -481,8 +488,15 @@ function getActionButtonType(action: TicketAction): 'primary' | 'success' | 'war
     return 'primary';
 }
 
-onMounted(() => {
-    fetchData();
+// 消息中心跳转过来时带 ?id=xxx,自动打开详情抽屉
+const route = useRoute();
+onMounted(async () => {
+    await fetchData();
+    const id = Number(route.query.id);
+    if (id) {
+        // openDetail 入参是 TicketItem,这里用最小对象调用(只用 id 字段)
+        await openDetail({ id } as TicketItem);
+    }
 });
 </script>
 
