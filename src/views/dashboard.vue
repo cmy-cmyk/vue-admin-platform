@@ -157,31 +157,31 @@ registerMap('china', chinaMap);
 const activities = [
     {
         content: '收藏商品',
-        description: 'xxx收藏了你的商品，就是不买',
+        description: '用户 ID 1024 收藏了商品 SKU-2024',
         timestamp: '30分钟前',
         color: '#00bcd4',
     },
     {
         content: '用户评价',
-        description: 'xxx给了某某商品一个差评，吐血啊',
+        description: '订单 20240820001 收到一条 3 星评价',
         timestamp: '55分钟前',
         color: '#1ABC9C',
     },
     {
         content: '订单提交',
-        description: 'xxx提交了订单，快去收钱吧',
+        description: '订单 20240820002 已提交待支付',
         timestamp: '1小时前',
         color: '#3f51b5',
     },
     {
         content: '退款申请',
-        description: 'xxx申请了仅退款，又要亏钱了',
+        description: '订单 20240819088 申请仅退款,待审核',
         timestamp: '15小时前',
         color: '#f44336',
     },
     {
         content: '商品上架',
-        description: '运营专员瞒着你上架了一辆飞机',
+        description: '运营专员上架了 12 个新 SKU',
         timestamp: '1天前',
         color: '#009688',
     },

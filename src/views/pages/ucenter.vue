@@ -9,13 +9,13 @@
                 <div class="user-info">
                     <div class="info-name">{{ name }}</div>
                     <div class="info-desc">
-                        <span>@lin-xin</span>
+                        <span>@admin</span>
                         <el-divider direction="vertical" />
-                        <el-link href="https://lin-xin.gitee.io" target="_blank">lin-xin.gitee.io</el-link>
+                        <el-link href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">vue-admin-platform</el-link>
                     </div>
-                    <div class="info-desc">FE Developer</div>
+                    <div class="info-desc">系统管理员</div>
                     <div class="info-icon">
-                        <a href="https://github.com/lin-xin" target="_blank"> <i class="el-icon-lx-github-fill"></i></a>
+                        <a href="https://github.com/cmy-cmyk" target="_blank"> <i class="el-icon-lx-github-fill"></i></a>
                         <i class="el-icon-lx-qq-fill"></i>
                         <i class="el-icon-lx-facebook-fill"></i>
                         <i class="el-icon-lx-twitter-fill"></i>
@@ -76,19 +76,11 @@
                             </el-form-item>
                         </el-form>
                     </el-tab-pane>
-                    <el-tab-pane name="label4" label="赞赏作者" class="user-tabpane">
+                    <el-tab-pane name="label4" label="关于" class="user-tabpane">
                         <div class="plugins-tips">
-                            如果该框架
-                            <el-link href="https://github.com/lin-xin/vue-manage-system" target="_blank"
-                                >vue-manage-system</el-link
-                            >
-                            对你有帮助，那就请作者喝杯饮料吧！<el-icon>
-                                <ColdDrink />
-                            </el-icon>
-                            加微信号 linxin_20 探讨问题。
-                        </div>
-                        <div>
-                            <img src="https://lin-xin.gitee.io/images/weixin.jpg" />
+                            本项目
+                            <el-link href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">vue-admin-platform</el-link>
+                            基于 Vue 3 + TypeScript + Pinia + Element Plus 构建,作为企业级后台系统的快速交付基座。
                         </div>
                     </el-tab-pane>
                 </el-tabs>

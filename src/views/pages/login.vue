@@ -34,7 +34,7 @@
                     <el-link type="primary" @click="$router.push('/reset-pwd')">忘记密码</el-link>
                 </div>
                 <el-button class="login-btn" type="primary" size="large" @click="submitForm(login)">登录</el-button>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
+                <p class="login-tips">Tips : 演示账号 admin / 123456(待接入真实接口)</p>
                 <p class="login-text">
                     没有账号？<el-link type="primary" @click="$router.push('/register')">立即注册</el-link>
                 </p>

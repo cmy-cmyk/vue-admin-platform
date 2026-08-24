@@ -3,7 +3,7 @@
         <!-- 折叠按钮 -->
         <div class="header-left">
             <img class="logo" src="../assets/img/logo.svg" alt="" />
-            <div class="web-title">后台管理系统</div>
+            <div class="web-title">Vue Admin Platform</div>
             <div class="collapse-btn" @click="collapseChage">
                 <el-icon v-if="sidebar.collapse">
                     <Expand />
@@ -47,11 +47,8 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
+                            <a href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">
                                 <el-dropdown-item>项目仓库</el-dropdown-item>
-                            </a>
-                            <a href="https://lin-xin.gitee.io/example/vuems-doc/" target="_blank">
-                                <el-dropdown-item>官方文档</el-dropdown-item>
                             </a>
                             <el-dropdown-item command="user">个人中心</el-dropdown-item>
                             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
