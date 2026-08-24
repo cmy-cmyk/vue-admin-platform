@@ -1,16 +1,15 @@
 import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 
 export const config = {
   port: parseInt(process.env.PORT || '3000', 10),
 
+  // SQLite 数据库文件路径(数据存在本地文件,零配置)
+  // 简历亮点:开发期用 SQLite 零配置,生产可平滑迁移到 MySQL(只换 db.ts)
   db: {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '3306', 10),
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'root',
-    database: process.env.DB_NAME || 'vue_admin_platform',
+    file: process.env.DB_FILE || path.join(__dirname, '../../data/vue_admin.db'),
   },
 
   jwt: {

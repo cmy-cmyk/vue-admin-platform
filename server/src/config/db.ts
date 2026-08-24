@@ -1,32 +1,35 @@
-import mysql from 'mysql2/promise';
+import { DatabaseSync } from 'node:sqlite';
+import fs from 'fs';
+import path from 'path';
 import { config } from './index';
 
-// 连接池:开发期够用,生产环境需根据压测调参
-export const pool = mysql.createPool({
-  host: config.db.host,
-  port: config.db.port,
-  user: config.db.user,
-  password: config.db.password,
-  database: config.db.database,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  // 让 mysql2 直接返回 JS 类型(number/Date),而非字符串
-  typeCast: function (field, next) {
-    if (field.type === 'TINY' && field.length === 1) {
-      return field.string() === '1'; // 1 -> true, 0 -> false
-    }
-    return next();
-  },
-});
+// 确保数据目录存在
+const dbFile = config.db.file;
+const dbDir = path.dirname(dbFile);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
 
-// 统一 query 封装,方便后续加日志、慢查询统计
+// node:sqlite 是 Node 22.5+ 内置模块,零依赖,无需编译
+// API 与 better-sqlite3 高度相似:prepare/all/get/exec
+export const db = new DatabaseSync(dbFile);
+db.exec('PRAGMA journal_mode = WAL;');
+
+// 兼容 mysql2 / better-sqlite3 的 query/queryOne 签名(controller 代码不用动)
+// node:sqlite 是同步 API,这里包装为 Promise 以兼容 await 调用
 export async function query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
-  const [rows] = await pool.query(sql, params);
+  const stmt = db.prepare(sql);
+  const rows = stmt.all(...params);
   return rows as T[];
 }
 
 export async function queryOne<T = any>(sql: string, params: any[] = []): Promise<T | null> {
-  const rows = await query<T>(sql, params);
-  return rows[0] || null;
+  const stmt = db.prepare(sql);
+  const row = stmt.get(...params);
+  return (row as T) || null;
+}
+
+// 同步执行多条 SQL(初始化用)
+export function exec(sql: string) {
+  return db.exec(sql);
 }
