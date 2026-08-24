@@ -1,162 +1,327 @@
 <template>
-    <div>
-        <TableSearch :query="query" :options="searchOpt" :search="handleSearch" />
-        <div class="container">
-
-            <TableCustom :columns="columns" :tableData="tableData" :total="page.total" :viewFunc="handleView"
-                :delFunc="handleDelete" :page-change="changePage" :editFunc="handleEdit">
-                <template #toolbarBtn>
-                    <el-button type="warning" :icon="CirclePlusFilled" @click="visible = true">新增</el-button>
-                </template>
-                <template #status="{ rows }">
-                    <el-tag type="success" v-if="rows.status">启用</el-tag>
-                    <el-tag type="danger" v-else>禁用</el-tag>
-                </template>
-                <template #permissions="{ rows }">
-                    <el-button type="primary" size="small" plain @click="handlePermission(rows)">管理</el-button>
-                </template>
-            </TableCustom>
+    <div class="role-container">
+        <div class="table-header">
+            <div class="header-left">
+                <el-input
+                    v-model="query.keyword"
+                    placeholder="角色名/标识"
+                    clearable
+                    style="width: 220px"
+                    @keyup.enter="handleSearch"
+                />
+                <el-button type="primary" @click="handleSearch">搜索</el-button>
+                <el-button @click="handleReset">重置</el-button>
+            </div>
+            <div class="header-right">
+                <el-button type="primary" v-permiss="'role:add'" @click="openCreate">+ 新增角色</el-button>
+            </div>
         </div>
-        <el-dialog :title="isEdit ? '编辑' : '新增'" v-model="visible" width="700px" destroy-on-close
-            :close-on-click-modal="false" @close="closeDialog">
-            <TableEdit :form-data="rowData" :options="options" :edit="isEdit" :update="updateData" />
-        </el-dialog>
-        <el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
-            <TableDetail :data="viewData">
-                <template #status="{ rows }">
-                    <el-tag type="success" v-if="rows.status">启用</el-tag>
-                    <el-tag type="danger" v-else>禁用</el-tag>
+
+        <el-table :data="tableData" v-loading="loading" border style="width: 100%">
+            <el-table-column prop="id" label="ID" width="60" />
+            <el-table-column prop="role_name" label="角色名" width="140" />
+            <el-table-column prop="role_key" label="标识" width="120" />
+            <el-table-column prop="remark" label="备注" min-width="180" />
+            <el-table-column label="状态" width="80">
+                <template #default="{ row }">
+                    <el-tag :type="row.status === 1 ? 'success' : 'info'">
+                        {{ row.status === 1 ? '启用' : '禁用' }}
+                    </el-tag>
                 </template>
-            </TableDetail>
+            </el-table-column>
+            <el-table-column prop="created_at" label="创建时间" width="170" />
+            <el-table-column label="操作" width="260" fixed="right">
+                <template #default="{ row }">
+                    <el-button size="small" v-permiss="'role:edit'" @click="openEdit(row)">编辑</el-button>
+                    <el-button size="small" type="success" @click="openPermission(row)">分配权限</el-button>
+                    <el-button
+                        size="small"
+                        type="danger"
+                        v-permiss="'role:delete'"
+                        :disabled="row.id === 1"
+                        @click="handleDelete(row)"
+                    >删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <div class="pagination">
+            <el-pagination
+                v-model:current-page="query.page"
+                v-model:page-size="query.pageSize"
+                :page-sizes="[10, 20, 50]"
+                :total="total"
+                layout="total, sizes, prev, pager, next, jumper"
+                @size-change="fetchData"
+                @current-change="fetchData"
+            />
+        </div>
+
+        <!-- 新增/编辑弹窗 -->
+        <el-dialog
+            v-model="formDialog.visible"
+            :title="formDialog.isEdit ? '编辑角色' : '新增角色'"
+            width="480px"
+        >
+            <el-form :model="formDialog.form" label-width="80px" :rules="formRules" ref="formRef">
+                <el-form-item label="角色名" prop="role_name">
+                    <el-input v-model="formDialog.form.role_name" placeholder="如:运营专员" />
+                </el-form-item>
+                <el-form-item label="标识" prop="role_key">
+                    <el-input
+                        v-model="formDialog.form.role_key"
+                        :disabled="formDialog.isEdit"
+                        placeholder="如:operator(英文)"
+                    />
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input v-model="formDialog.form.remark" type="textarea" />
+                </el-form-item>
+                <el-form-item label="状态">
+                    <el-switch v-model="formDialog.form.status" :active-value="1" :inactive-value="0" />
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <el-button @click="formDialog.visible = false">取消</el-button>
+                <el-button type="primary" :loading="formDialog.loading" @click="handleSubmitForm">确定</el-button>
+            </template>
         </el-dialog>
-        <el-dialog title="权限管理" v-model="visible2" width="500px" destroy-on-close>
-            <RolePermission :permiss-options="permissOptions" />
+
+        <!-- 分配权限弹窗 -->
+        <el-dialog v-model="permDialog.visible" title="分配菜单权限" width="480px">
+            <el-tree
+                ref="treeRef"
+                :data="menuTree"
+                node-key="id"
+                show-checkbox
+                default-expand-all
+                :props="{ label: 'menu_name', children: 'children' }"
+            />
+            <div class="perm-tips">
+                勾选父节点会自动勾选所有子节点;保存时同时记录半选父节点,确保回显正确。
+            </div>
+            <template #footer>
+                <el-button @click="permDialog.visible = false">取消</el-button>
+                <el-button type="primary" :loading="permDialog.loading" @click="handleSubmitPermission">保存</el-button>
+            </template>
         </el-dialog>
     </div>
 </template>
 
-<script setup lang="ts" name="system-role">
-import { ref, reactive } from 'vue';
-import { ElMessage } from 'element-plus';
-import { Role } from '@/types/role';
-import { fetchRoleData } from '@/api';
-import TableCustom from '@/components/table-custom.vue';
-import TableDetail from '@/components/table-detail.vue';
-import RolePermission from './role-permission.vue'
-import { CirclePlusFilled } from '@element-plus/icons-vue';
-import { FormOption, FormOptionList } from '@/types/form-option';
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue';
+import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
+import type { ElTree } from 'element-plus';
+import {
+    getRolePageApi,
+    createRoleApi,
+    updateRoleApi,
+    deleteRoleApi,
+    getRoleMenusApi,
+    assignRoleMenusApi,
+    type RoleItem,
+} from '@/api/role';
+import { getMenuListApi, type MenuItem } from '@/api/menu';
 
-// 查询相关
+const loading = ref(false);
+const tableData = ref<RoleItem[]>([]);
+const total = ref(0);
+
 const query = reactive({
-    name: '',
+    page: 1,
+    pageSize: 10,
+    keyword: '',
 });
-const searchOpt = ref<FormOptionList[]>([
-    { type: 'input', label: '角色名称：', prop: 'name' }
-])
+
+const fetchData = async () => {
+    loading.value = true;
+    try {
+        const res = await getRolePageApi(query);
+        tableData.value = res.data.list;
+        total.value = res.data.total;
+    } finally {
+        loading.value = false;
+    }
+};
+
 const handleSearch = () => {
-    changePage(1);
+    query.page = 1;
+    fetchData();
+};
+const handleReset = () => {
+    query.keyword = '';
+    query.page = 1;
+    fetchData();
 };
 
-// 表格相关
-let columns = ref([
-    { type: 'index', label: '序号', width: 55, align: 'center' },
-    { prop: 'name', label: '角色名称' },
-    { prop: 'key', label: '角色标识' },
-    { prop: 'status', label: '状态' },
-    { prop: 'permissions', label: '权限管理' },
-    { prop: 'operator', label: '操作', width: 250 },
-])
-const page = reactive({
-    index: 1,
-    size: 10,
-    total: 0,
-})
-const tableData = ref<Role[]>([]);
-const getData = async () => {
-    const res = await fetchRoleData()
-    tableData.value = res.data.list;
-    page.total = res.data.pageTotal;
-};
-getData();
-const changePage = (val: number) => {
-    page.index = val;
-    getData();
+const handleDelete = (row: RoleItem) => {
+    ElMessageBox.confirm(`确定删除角色 ${row.role_name}?`, '提示', { type: 'warning' })
+        .then(async () => {
+            await deleteRoleApi(row.id);
+            ElMessage.success('删除成功');
+            fetchData();
+        })
+        .catch(() => {});
 };
 
-// 新增/编辑弹窗相关
-const options = ref<FormOption>({
-    labelWidth: '100px',
-    span: 24,
-    list: [
-        { type: 'input', label: '角色名称', prop: 'name', required: true },
-        { type: 'input', label: '角色标识', prop: 'key', required: true },
-        { type: 'switch', label: '状态', prop: 'status', required: false, activeText: '启用', inactiveText: '禁用' },
-    ]
-})
-const visible = ref(false);
-const isEdit = ref(false);
-const rowData = ref({});
-const handleEdit = (row: Role) => {
-    rowData.value = { ...row };
-    isEdit.value = true;
-    visible.value = true;
-};
-const updateData = () => {
-    closeDialog();
-    getData();
-};
-const closeDialog = () => {
-    visible.value = false;
-    isEdit.value = false;
-    rowData.value = {};
-};
-
-// 查看详情弹窗相关
-const visible1 = ref(false);
-const viewData = ref({
-    row: {},
-    list: [],
-    column: 1
+// ===== 新增/编辑弹窗 =====
+const formRef = ref<FormInstance>();
+const formDialog = reactive<{
+    visible: boolean;
+    isEdit: boolean;
+    loading: boolean;
+    editId: number | null;
+    form: { role_name: string; role_key: string; remark: string; status: number };
+}>({
+    visible: false,
+    isEdit: false,
+    loading: false,
+    editId: null,
+    form: { role_name: '', role_key: '', remark: '', status: 1 },
 });
-const handleView = (row: Role) => {
-    viewData.value.row = { ...row }
-    viewData.value.list = [
-        {
-            prop: 'id',
-            label: '角色ID',
-        },
-        {
-            prop: 'name',
-            label: '角色名称',
-        },
-        {
-            prop: 'key',
-            label: '角色标识',
-        },
-        {
-            prop: 'status',
-            label: '角色状态',
-        },
-    ]
-    visible1.value = true;
+
+const formRules: FormRules = {
+    role_name: [{ required: true, message: '请输入角色名', trigger: 'blur' }],
+    role_key: [{ required: true, message: '请输入标识', trigger: 'blur' }],
 };
 
-// 删除相关
-const handleDelete = (row: Role) => {
-    ElMessage.success('删除成功');
-}
+const openCreate = () => {
+    formDialog.isEdit = false;
+    formDialog.editId = null;
+    formDialog.form = { role_name: '', role_key: '', remark: '', status: 1 };
+    formDialog.visible = true;
+};
 
-
-// 权限管理弹窗相关
-const visible2 = ref(false);
-const permissOptions = ref({})
-const handlePermission = (row: Role) => {
-    visible2.value = true;
-    permissOptions.value = {
-        id: row.id,
-        permiss: row.permiss
+const openEdit = (row: RoleItem) => {
+    formDialog.isEdit = true;
+    formDialog.editId = row.id;
+    formDialog.form = {
+        role_name: row.role_name,
+        role_key: row.role_key,
+        remark: row.remark,
+        status: row.status,
     };
-}
+    formDialog.visible = true;
+};
+
+const handleSubmitForm = async () => {
+    if (!formRef.value) return;
+    await formRef.value.validate(async (valid) => {
+        if (!valid) return;
+        formDialog.loading = true;
+        try {
+            if (formDialog.isEdit && formDialog.editId) {
+                await updateRoleApi(formDialog.editId, formDialog.form);
+                ElMessage.success('更新成功');
+            } else {
+                await createRoleApi(formDialog.form);
+                ElMessage.success('创建成功');
+            }
+            formDialog.visible = false;
+            fetchData();
+        } finally {
+            formDialog.loading = false;
+        }
+    });
+};
+
+// ===== 权限分配弹窗 =====
+type TreeNode = MenuItem & { children?: TreeNode[] };
+const treeRef = ref<InstanceType<typeof ElTree>>();
+const menuTree = ref<TreeNode[]>([]);
+const permDialog = reactive<{ visible: boolean; loading: boolean; roleId: number | null }>({
+    visible: false,
+    loading: false,
+    roleId: null,
+});
+
+// 把扁平菜单构造成树
+const buildTree = (list: MenuItem[], parentId = 0): TreeNode[] => {
+    return list
+        .filter((m) => m.parent_id === parentId)
+        .sort((a, b) => a.sort - b.sort)
+        .map((m) => ({
+            ...m,
+            children: buildTree(list, m.id).length ? buildTree(list, m.id) : undefined,
+        }));
+};
+
+const openPermission = async (row: RoleItem) => {
+    permDialog.roleId = row.id;
+    permDialog.visible = true;
+    // 先拉所有菜单(扁平),构造成树
+    const menuRes = await getMenuListApi();
+    menuTree.value = buildTree(menuRes.data);
+
+    // 再拉角色已分配的菜单 id,回显
+    const res = await getRoleMenusApi(row.id);
+    const checkedIds = res.data;
+
+    // 关键:只能 setCheckedKeys 叶子节点(没有 children 的)
+    // 如果直接 set 父节点,el-tree 会把所有子节点全选
+    // 用 setTimeout 等 tree 渲染完再 set
+    const collectLeafIds = (nodes: TreeNode[]): number[] => {
+        let ids: number[] = [];
+        for (const n of nodes) {
+            if (n.children && n.children.length > 0) {
+                ids = ids.concat(collectLeafIds(n.children));
+            } else {
+                ids.push(n.id);
+            }
+        }
+        return ids;
+    };
+    const allLeafIds = new Set(collectLeafIds(menuTree.value));
+    const leafChecked = checkedIds.filter((id) => allLeafIds.has(id));
+
+    setTimeout(() => {
+        treeRef.value?.setCheckedKeys(leafChecked);
+    }, 0);
+};
+
+const handleSubmitPermission = async () => {
+    if (!permDialog.roleId || !treeRef.value) return;
+    permDialog.loading = true;
+    try {
+        // 同时保存「完全勾选」+「半选父节点」,保证回显一致
+        const checked = treeRef.value.getCheckedKeys() as number[];
+        const halfChecked = treeRef.value.getHalfCheckedKeys() as number[];
+        const menuIds = [...new Set([...checked, ...halfChecked])];
+        await assignRoleMenusApi(permDialog.roleId, menuIds);
+        ElMessage.success('权限保存成功');
+        permDialog.visible = false;
+    } finally {
+        permDialog.loading = false;
+    }
+};
+
+onMounted(() => {
+    fetchData();
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+.role-container {
+    padding: 16px;
+}
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.header-left {
+    display: flex;
+    gap: 8px;
+}
+.pagination {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+.perm-tips {
+    margin-top: 12px;
+    color: #909399;
+    font-size: 12px;
+}
+</style>
