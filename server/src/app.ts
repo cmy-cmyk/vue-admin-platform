@@ -3,6 +3,10 @@ import cors from 'cors';
 import { config } from './config';
 import routes from './routes';
 import { fail } from './utils/response';
+import { ensureDbInitialized } from './utils/ensure-db';
+
+// 启动前确保数据库已初始化(表不存在则自动建表 + 种子数据)
+ensureDbInitialized();
 
 const app = express();
 

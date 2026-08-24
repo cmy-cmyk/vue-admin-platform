@@ -1,8 +1,11 @@
 {
   "name": "vue-admin-platform-server",
   "version": "1.0.0",
-  "description": "Vue Admin Platform 后端服务:Express + TypeScript + MySQL + JWT",
+  "description": "Vue Admin Platform 后端服务:Express + TypeScript + SQLite + JWT",
   "main": "dist/app.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "scripts": {
     "dev": "node --experimental-sqlite --import tsx src/app.ts",
     "build": "tsc -p .",

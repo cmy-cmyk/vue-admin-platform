@@ -3,6 +3,19 @@ import path from 'path';
 
 dotenv.config();
 
+// CORS 白名单:优先读环境变量 CORS_ORIGINS(逗号分隔),用于线上部署放行前端域名
+// 未配置时回退到本地开发常用端口
+function parseCorsOrigins(): string[] {
+  const raw = process.env.CORS_ORIGINS;
+  if (raw && raw.trim()) {
+    return raw
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+  return ['http://localhost:5173', 'http://localhost:4173', 'http://127.0.0.1:5173'];
+}
+
 export const config = {
   port: parseInt(process.env.PORT || '3000', 10),
 
@@ -19,6 +32,6 @@ export const config = {
     refreshExpires: process.env.JWT_REFRESH_EXPIRES || '7d',
   },
 
-  // CORS 白名单,前端 dev server 默认 5173
-  corsOrigins: ['http://localhost:5173', 'http://localhost:4173', 'http://127.0.0.1:5173'],
+  // CORS 白名单:开发用 localhost,生产用环境变量注入前端域名
+  corsOrigins: parseCorsOrigins(),
 };
