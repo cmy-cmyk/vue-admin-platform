@@ -3,6 +3,7 @@ import authRoutes from './auth';
 import userRoutes from './user';
 import roleRoutes from './role';
 import menuRoutes from './menu';
+import ticketRoutes from './ticket';
 
 const router = Router();
 
@@ -11,6 +12,7 @@ router.use('/auth', authRoutes);
 router.use('/user', userRoutes);
 router.use('/role', roleRoutes);
 router.use('/menu', menuRoutes);
+router.use('/ticket', ticketRoutes);
 
 // 简单健康检查
 router.get('/health', (_req, res) => {

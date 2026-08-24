@@ -4,44 +4,44 @@
             <el-col :span="6">
                 <el-card shadow="hover" body-class="card-body">
                     <el-icon class="card-icon bg1">
-                        <User />
+                        <Tickets />
                     </el-icon>
                     <div class="card-content">
-                        <countup class="card-num color1" :end="6666" />
-                        <div>用户访问量</div>
+                        <countup class="card-num color1" :end="ticketStats.total" />
+                        <div>工单总数</div>
                     </div>
                 </el-card>
             </el-col>
             <el-col :span="6">
                 <el-card shadow="hover" body-class="card-body">
                     <el-icon class="card-icon bg2">
-                        <ChatDotRound />
+                        <Bell />
                     </el-icon>
                     <div class="card-content">
-                        <countup class="card-num color2" :end="168" />
-                        <div>系统消息</div>
+                        <countup class="card-num color2" :end="ticketStats.pending" />
+                        <div>待审批</div>
                     </div>
                 </el-card>
             </el-col>
             <el-col :span="6">
                 <el-card shadow="hover" body-class="card-body">
                     <el-icon class="card-icon bg3">
-                        <Goods />
+                        <CircleCheck />
                     </el-icon>
                     <div class="card-content">
-                        <countup class="card-num color3" :end="8888" />
-                        <div>商品数量</div>
+                        <countup class="card-num color3" :end="ticketStats.approved" />
+                        <div>已通过</div>
                     </div>
                 </el-card>
             </el-col>
             <el-col :span="6">
                 <el-card shadow="hover" body-class="card-body">
                     <el-icon class="card-icon bg4">
-                        <ShoppingCartFull />
+                        <CloseBold />
                     </el-icon>
                     <div class="card-content">
-                        <countup class="card-num color4" :end="568" />
-                        <div>今日订单量</div>
+                        <countup class="card-num color4" :end="ticketStats.rejected" />
+                        <div>已驳回</div>
                     </div>
                 </el-card>
             </el-col>
@@ -127,6 +127,7 @@
 </template>
 
 <script setup lang="ts" name="dashboard">
+import { reactive, onMounted } from 'vue';
 import countup from '@/components/countup.vue';
 import { use, registerMap } from 'echarts/core';
 import { BarChart, LineChart, PieChart, MapChart } from 'echarts/charts';
@@ -141,6 +142,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 import VChart from 'vue-echarts';
 import { dashOpt1, dashOpt2, mapOptions } from './chart/options';
 import chinaMap from '@/utils/china';
+import { getTicketStatsApi, type TicketStats } from '@/api/ticket';
 use([
     CanvasRenderer,
     BarChart,
@@ -154,6 +156,30 @@ use([
     MapChart
 ]);
 registerMap('china', chinaMap);
+
+// 工单统计卡片:首次进入首页时拉取真实数据
+// 简历卖点:首页数据看板实时反映工单流转情况
+const ticketStats = reactive<TicketStats>({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+    myCreated: 0,
+    myPendingApprove: 0,
+    isAdmin: false
+});
+const fetchTicketStats = async () => {
+    try {
+        const res = await getTicketStatsApi();
+        Object.assign(ticketStats, res.data);
+    } catch {
+        // 接口失败不阻断首页渲染(无权限用户仍可看其他看板)
+    }
+};
+onMounted(() => {
+    fetchTicketStats();
+});
+
 const activities = [
     {
         content: '收藏商品',
