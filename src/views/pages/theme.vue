@@ -104,11 +104,11 @@ const themeStore = useThemeStore();
 const sidebar = useSidebarStore();
 
 const color = reactive({
-    primary: localStorage.getItem('theme-primary') || '#0f766e',
-    success: localStorage.getItem('theme-success') || '#67c23a',
-    warning: localStorage.getItem('theme-warning') || '#e6a23c',
-    danger: localStorage.getItem('theme-danger') || '#f56c6c',
-    info: localStorage.getItem('theme-info') || '#909399',
+    primary: localStorage.getItem('theme-primary') || '#1e3a8a',
+    success: localStorage.getItem('theme-success') || '#16a34a',
+    warning: localStorage.getItem('theme-warning') || '#d97706',
+    danger: localStorage.getItem('theme-danger') || '#dc2626',
+    info: localStorage.getItem('theme-info') || '#475569',
     headerBgColor: themeStore.headerBgColor,
     headerTextColor: themeStore.headerTextColor
 });
@@ -159,23 +159,23 @@ const resetSidebar = () => {
 const system = [
     {
         name: '默认',
-        color: '#242f42'
+        color: '#1e3a8a'
     },
     {
-        name: '健康',
-        color: '#1ABC9C'
+        name: '靛青',
+        color: '#4338ca'
     },
     {
-        name: '优雅',
-        color: '#722ed1'
+        name: '石墨',
+        color: '#1e293b'
     },
     {
-        name: '热情',
-        color: '#f44336'
+        name: '钢蓝',
+        color: '#2563eb'
     },
     {
-        name: '宁静',
-        color: '#00bcd4'
+        name: '黛绿',
+        color: '#0f766e'
     }
 ];
 const setSystemTheme = (data: any) => {

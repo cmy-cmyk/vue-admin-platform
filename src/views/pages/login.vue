@@ -181,8 +181,8 @@ tabs.clearTabs();
     position: relative;
     flex: 1;
     overflow: hidden;
-    /* 主题色对角渐变:深青 → 青绿 → 翠绿 */
-    background: linear-gradient(135deg, #0f766e 0%, #0d9488 45%, #14b8a6 100%);
+    /* 商务深藏青对角渐变:深藏青 → 钢蓝 */
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 45%, #2563eb 100%);
     color: #fff;
     display: flex;
     align-items: center;
@@ -264,7 +264,7 @@ tabs.clearTabs();
     height: 400px;
     top: -100px;
     right: -100px;
-    background: radial-gradient(circle, #5eead4 0%, transparent 70%);
+    background: radial-gradient(circle, #60a5fa 0%, transparent 70%);
 }
 
 .brand-glow-2 {
@@ -272,7 +272,7 @@ tabs.clearTabs();
     height: 300px;
     bottom: -50px;
     left: -50px;
-    background: radial-gradient(circle, #2dd4bf 0%, transparent 70%);
+    background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
 }
 
 /* === 右侧登录表单区 === */
