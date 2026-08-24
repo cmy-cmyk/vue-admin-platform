@@ -314,3 +314,126 @@ export async function getTicketStats(req: Request, res: Response) {
   // 标记 isAdmin 给前端判断是否显示全部统计卡片
   return success(res, { ...stats, isAdmin });
 }
+
+// ============================================================
+// 6. GET /api/ticket/trend  近 7 天每日工单「创建数 / 审批通过数」
+//    返回结构: { dates: [...7], created: [...7], approved: [...7] }
+//    用于首页折线图
+// ============================================================
+export async function getTicketTrend(req: Request, res: Response) {
+  // SQLite 用 date() 函数取日期字符串,按天分组
+  // 注:演示数据 created_at 都是同一时刻,趋势图会集中在某一天;真实业务下会有分布
+  const rows = await query<any>(
+    `SELECT
+       date(created_at) AS day,
+       COUNT(*) AS created_count
+     FROM ticket
+     WHERE created_at >= date('now', '-6 days')
+     GROUP BY date(created_at)
+     ORDER BY day ASC`
+  );
+
+  // 审批通过数:取 ticket_log 中 action='approve' 且 to_status='approved' 的记录
+  const approveRows = await query<any>(
+    `SELECT
+       date(l.created_at) AS day,
+       COUNT(*) AS approved_count
+     FROM ticket_log l
+     WHERE l.action = 'approve'
+       AND l.to_status = 'approved'
+       AND l.created_at >= date('now', '-6 days')
+     GROUP BY date(l.created_at)
+     ORDER BY day ASC`
+  );
+
+  // 组装连续 7 天的数组(缺失日期补 0,保证图表 x 轴连续)
+  const today = new Date();
+  const createdMap: Record<string, number> = {};
+  const approvedMap: Record<string, number> = {};
+
+  rows.forEach((r: any) => { createdMap[r.day] = r.created_count; });
+  approveRows.forEach((r: any) => { approvedMap[r.day] = r.approved_count; });
+
+  const fullDates: string[] = [];
+  const createdArr: number[] = [];
+  const approvedArr: number[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dayStr = d.toISOString().slice(0, 10); // YYYY-MM-DD
+    fullDates.push(dayStr.slice(5)); // MM-DD
+    createdArr.push(createdMap[dayStr] || 0);
+    approvedArr.push(approvedMap[dayStr] || 0);
+  }
+
+  return success(res, { dates: fullDates, created: createdArr, approved: approvedArr });
+}
+
+// ============================================================
+// 7. GET /api/ticket/distribution  状态分布 + 优先级分布
+//    返回: { status: [{name,value}], priority: [{name,value}] }
+//    用于首页饼图(2 张)
+// ============================================================
+export async function getTicketDistribution(req: Request, res: Response) {
+  const statusRows = await query<any>(
+    `SELECT status, COUNT(*) AS count FROM ticket GROUP BY status`
+  );
+  const priorityRows = await query<any>(
+    `SELECT priority, COUNT(*) AS count FROM ticket GROUP BY priority`
+  );
+
+  // 状态中文标签映射(与 ticket-fsm.ts 保持一致)
+  const statusLabels: Record<string, string> = {
+    draft: '草稿', pending: '待审批', approving: '审批中',
+    approved: '已通过', rejected: '已驳回', closed: '已关闭',
+  };
+  const priorityLabels: Record<string, string> = {
+    low: '低', normal: '中', high: '高', urgent: '紧急',
+  };
+
+  const status = statusRows.map((r: any) => ({
+    name: statusLabels[r.status] || r.status,
+    value: r.count,
+  }));
+  const priority = priorityRows.map((r: any) => ({
+    name: priorityLabels[r.priority] || r.priority,
+    value: r.count,
+  }));
+
+  return success(res, { status, priority });
+}
+
+// ============================================================
+// 8. GET /api/ticket/recent-logs  最近 5 条流转日志(首页时间线)
+//    返回: [{ id, ticket_id, title, action, operator_name, remark, created_at }]
+// ============================================================
+export async function getRecentTicketLogs(req: Request, res: Response) {
+  const logs = await query<any>(
+    `SELECT l.id, l.ticket_id, t.title, l.action, l.remark,
+            u.nickname AS operator_name, l.created_at
+     FROM ticket_log l
+     JOIN ticket t ON t.id = l.ticket_id
+     LEFT JOIN user u ON u.id = l.operator_id
+     ORDER BY l.id DESC
+     LIMIT 5`
+  );
+  return success(res, logs);
+}
+
+// ============================================================
+// 9. GET /api/ticket/top-creators  发起人工单数 Top5(首页排行榜)
+//    返回: [{ user_id, nickname, username, count }]
+// ============================================================
+export async function getTopCreators(req: Request, res: Response) {
+  const rows = await query<any>(
+    `SELECT t.creator_id AS user_id,
+            u.nickname, u.username,
+            COUNT(*) AS count
+     FROM ticket t
+     LEFT JOIN user u ON u.id = t.creator_id
+     GROUP BY t.creator_id
+     ORDER BY count DESC
+     LIMIT 5`
+  );
+  return success(res, rows);
+}

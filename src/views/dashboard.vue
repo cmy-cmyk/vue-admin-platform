@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- 工单统计卡片(真实数据) -->
         <el-row :gutter="20" class="mgb20">
             <el-col :span="6">
                 <el-card shadow="hover" body-class="card-body">
@@ -47,79 +48,88 @@
             </el-col>
         </el-row>
 
+        <!-- 趋势图(近 7 天创建数/审批通过数) + 状态分布饼图 -->
         <el-row :gutter="20" class="mgb20">
             <el-col :span="18">
                 <el-card shadow="hover">
                     <div class="card-header">
-                        <p class="card-header-title">订单动态</p>
-                        <p class="card-header-desc">最近一周订单状态，包括订单成交量和订单退货量</p>
+                        <p class="card-header-title">工单趋势</p>
+                        <p class="card-header-desc">最近一周工单创建量与审批通过量</p>
                     </div>
-                    <v-chart class="chart" :option="dashOpt1" />
+                    <v-chart class="chart" :option="trendOption" autoresize />
                 </el-card>
             </el-col>
             <el-col :span="6">
                 <el-card shadow="hover">
                     <div class="card-header">
-                        <p class="card-header-title">品类分布</p>
-                        <p class="card-header-desc">最近一个月销售商品的品类情况</p>
+                        <p class="card-header-title">状态分布</p>
+                        <p class="card-header-desc">当前所有工单状态占比</p>
                     </div>
-                    <v-chart class="chart" :option="dashOpt2" />
+                    <v-chart class="chart" :option="statusPieOption" autoresize />
                 </el-card>
             </el-col>
         </el-row>
+
+        <!-- 优先级分布 / 最近流转时间线 / 发起人 Top5 -->
         <el-row :gutter="20">
             <el-col :span="7">
                 <el-card shadow="hover" :body-style="{ height: '400px' }">
                     <div class="card-header">
-                        <p class="card-header-title">时间线</p>
-                        <p class="card-header-desc">最新的销售动态和活动信息</p>
+                        <p class="card-header-title">优先级分布</p>
+                        <p class="card-header-desc">工单按优先级聚合</p>
                     </div>
-                    <el-timeline>
-                        <el-timeline-item v-for="(activity, index) in activities" :key="index" :color="activity.color">
-                            <div class="timeline-item">
-                                <div>
-                                    <p>{{ activity.content }}</p>
-                                    <p class="timeline-desc">{{ activity.description }}</p>
-                                </div>
-                                <div class="timeline-time">{{ activity.timestamp }}</div>
-                            </div>
-                        </el-timeline-item>
-                    </el-timeline>
+                    <v-chart class="pie-chart" :option="priorityPieOption" autoresize />
                 </el-card>
             </el-col>
             <el-col :span="10">
                 <el-card shadow="hover" :body-style="{ height: '400px' }">
                     <div class="card-header">
-                        <p class="card-header-title">渠道统计</p>
-                        <p class="card-header-desc">最近一个月的订单来源统计</p>
+                        <p class="card-header-title">最近流转</p>
+                        <p class="card-header-desc">最新的工单审批动态</p>
                     </div>
-                    <v-chart class="map-chart" :option="mapOptions" />
+                    <el-timeline v-if="recentLogs.length">
+                        <el-timeline-item v-for="log in recentLogs" :key="log.id" :color="getActionColor(log.action)">
+                            <div class="timeline-item">
+                                <div>
+                                    <p>
+                                        {{ log.operator_name }} {{ TICKET_ACTION_LABEL[log.action] }}了「{{
+                                            log.title
+                                        }}」
+                                    </p>
+                                    <p class="timeline-desc">{{ log.remark || '无备注' }}</p>
+                                </div>
+                                <div class="timeline-time">{{ formatTime(log.created_at) }}</div>
+                            </div>
+                        </el-timeline-item>
+                    </el-timeline>
+                    <el-empty v-else description="暂无流转记录" />
                 </el-card>
             </el-col>
             <el-col :span="7">
                 <el-card shadow="hover" :body-style="{ height: '400px' }">
                     <div class="card-header">
-                        <p class="card-header-title">排行榜</p>
-                        <p class="card-header-desc">销售商品的热门榜单Top5</p>
+                        <p class="card-header-title">发起人 Top5</p>
+                        <p class="card-header-desc">工单发起数量排行</p>
                     </div>
-                    <div>
-                        <div v-for="(rank, index) in ranks" class="rank-item">
-                            <div class="rank-item-avatar">{{ index + 1 }}</div>
+                    <div v-if="topCreators.length">
+                        <div v-for="(rank, index) in topCreators" :key="rank.user_id" class="rank-item">
+                            <div class="rank-item-avatar" :class="{ 'rank-top': index < 3 }">{{ index + 1 }}</div>
                             <div class="rank-item-content">
                                 <div class="rank-item-top">
-                                    <div class="rank-item-title">{{ rank.title }}</div>
-                                    <div class="rank-item-desc">销量：{{ rank.value }}</div>
+                                    <div class="rank-item-title">{{ rank.nickname || rank.username }}</div>
+                                    <div class="rank-item-desc">{{ rank.count }} 单</div>
                                 </div>
                                 <el-progress
                                     :show-text="false"
                                     striped
                                     :stroke-width="10"
-                                    :percentage="rank.percent"
-                                    :color="rank.color"
+                                    :percentage="getPercent(rank.count, maxCreatorCount)"
+                                    :color="getRankColor(index)"
                                 />
                             </div>
                         </div>
                     </div>
+                    <el-empty v-else description="暂无数据" />
                 </el-card>
             </el-col>
         </el-row>
@@ -127,38 +137,29 @@
 </template>
 
 <script setup lang="ts" name="dashboard">
-import { reactive, onMounted } from 'vue';
+import { reactive, ref, computed, onMounted } from 'vue';
 import countup from '@/components/countup.vue';
-import { use, registerMap } from 'echarts/core';
-import { BarChart, LineChart, PieChart, MapChart } from 'echarts/charts';
-import {
-    GridComponent,
-    TooltipComponent,
-    LegendComponent,
-    TitleComponent,
-    VisualMapComponent
-} from 'echarts/components';
+import { use } from 'echarts/core';
+import { LineChart, PieChart } from 'echarts/charts';
+import { GridComponent, TooltipComponent, LegendComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from 'vue-echarts';
-import { dashOpt1, dashOpt2, mapOptions } from './chart/options';
-import chinaMap from '@/utils/china';
-import { getTicketStatsApi, type TicketStats } from '@/api/ticket';
-use([
-    CanvasRenderer,
-    BarChart,
-    GridComponent,
-    LineChart,
-    PieChart,
-    TooltipComponent,
-    LegendComponent,
-    TitleComponent,
-    VisualMapComponent,
-    MapChart
-]);
-registerMap('china', chinaMap);
+import {
+    getTicketStatsApi,
+    getTicketTrendApi,
+    getTicketDistributionApi,
+    getRecentTicketLogsApi,
+    getTopCreatorsApi,
+    TICKET_ACTION_LABEL,
+    type TicketStats,
+    type RecentLog,
+    type TopCreator
+} from '@/api/ticket';
 
-// 工单统计卡片:首次进入首页时拉取真实数据
-// 简历卖点:首页数据看板实时反映工单流转情况
+// 只用 LineChart + PieChart,地图/柱状图等不再使用
+use([CanvasRenderer, LineChart, PieChart, GridComponent, TooltipComponent, LegendComponent, TitleComponent]);
+
+// ========== 工单统计卡片 ==========
 const ticketStats = reactive<TicketStats>({
     total: 0,
     pending: 0,
@@ -173,78 +174,143 @@ const fetchTicketStats = async () => {
         const res = await getTicketStatsApi();
         Object.assign(ticketStats, res.data);
     } catch {
-        // 接口失败不阻断首页渲染(无权限用户仍可看其他看板)
+        // 接口失败不阻断首页渲染
     }
 };
+
+// ========== 趋势图 ==========
+const trendData = ref({ dates: [] as string[], created: [] as number[], approved: [] as number[] });
+const trendOption = computed(() => ({
+    tooltip: { trigger: 'axis' },
+    legend: { data: ['创建数', '审批通过数'] },
+    grid: { top: '8%', left: '2%', right: '3%', bottom: '2%', containLabel: true },
+    color: ['#009688', '#2d8cf0'],
+    xAxis: { type: 'category', boundaryGap: false, data: trendData.value.dates },
+    yAxis: { type: 'value', minInterval: 1 },
+    series: [
+        {
+            name: '创建数',
+            type: 'line',
+            smooth: true,
+            areaStyle: { opacity: 0.2 },
+            data: trendData.value.created
+        },
+        {
+            name: '审批通过数',
+            type: 'line',
+            smooth: true,
+            areaStyle: { opacity: 0.2 },
+            data: trendData.value.approved
+        }
+    ]
+}));
+const fetchTrend = async () => {
+    try {
+        const res = await getTicketTrendApi();
+        trendData.value = res.data;
+    } catch {}
+};
+
+// ========== 状态分布饼图 ==========
+const statusDist = ref<{ name: string; value: number }[]>([]);
+const statusPieOption = computed(() => ({
+    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+    legend: { bottom: '2%', left: 'center' },
+    color: ['#909399', '#e6a23c', '#e6a23c', '#67c23a', '#f56c6c', '#909399'],
+    series: [
+        {
+            type: 'pie',
+            radius: ['40%', '70%'],
+            center: ['50%', '45%'],
+            itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+            label: { show: false },
+            data: statusDist.value
+        }
+    ]
+}));
+
+// ========== 优先级分布饼图 ==========
+const priorityDist = ref<{ name: string; value: number }[]>([]);
+const priorityPieOption = computed(() => ({
+    tooltip: { trigger: 'item', formatter: '{b}: {c} ({d}%)' },
+    legend: { bottom: '2%', left: 'center' },
+    color: ['#909399', '#409eff', '#e6a23c', '#f56c6c'],
+    series: [
+        {
+            type: 'pie',
+            radius: ['40%', '70%'],
+            center: ['50%', '45%'],
+            itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+            label: { show: false },
+            data: priorityDist.value
+        }
+    ]
+}));
+const fetchDistribution = async () => {
+    try {
+        const res = await getTicketDistributionApi();
+        statusDist.value = res.data.status;
+        priorityDist.value = res.data.priority;
+    } catch {}
+};
+
+// ========== 最近流转时间线 ==========
+const recentLogs = ref<RecentLog[]>([]);
+const fetchRecentLogs = async () => {
+    try {
+        const res = await getRecentTicketLogsApi();
+        recentLogs.value = res.data;
+    } catch {}
+};
+// action -> 时间线颜色(语义化)
+const getActionColor = (action: string) => {
+    const map: Record<string, string> = {
+        submit: '#409eff',
+        approve: '#67c23a',
+        reject: '#f56c6c',
+        withdraw: '#909399',
+        close: '#909399'
+    };
+    return map[action] || '#909399';
+};
+// 时间格式化:只取 HH:mm(同一天)或 MM-DD HH:mm(跨天)
+const formatTime = (ts: string) => {
+    const d = new Date(ts.replace(' ', 'T'));
+    const now = new Date();
+    const sameDay = d.toDateString() === now.toDateString();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    if (sameDay) return `${hh}:${mm}`;
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${month}-${day} ${hh}:${mm}`;
+};
+
+// ========== Top5 排行榜 ==========
+const topCreators = ref<TopCreator[]>([]);
+const maxCreatorCount = computed(() => Math.max(...topCreators.value.map(t => t.count), 1));
+const fetchTopCreators = async () => {
+    try {
+        const res = await getTopCreatorsApi();
+        topCreators.value = res.data;
+    } catch {}
+};
+// 计算进度条百分比(相对于最大值)
+const getPercent = (count: number, max: number) => Math.round((count / max) * 100);
+// 排行榜颜色:前三名高亮
+const getRankColor = (index: number) => {
+    const colors = ['#f25e43', '#00bcd4', '#64d572'];
+    return colors[index] || '#009688';
+};
+
+// 首次挂载并行拉取所有数据
 onMounted(() => {
     fetchTicketStats();
+    fetchTrend();
+    fetchDistribution();
+    fetchRecentLogs();
+    fetchTopCreators();
 });
-
-const activities = [
-    {
-        content: '收藏商品',
-        description: '用户 ID 1024 收藏了商品 SKU-2024',
-        timestamp: '30分钟前',
-        color: '#00bcd4'
-    },
-    {
-        content: '用户评价',
-        description: '订单 20240820001 收到一条 3 星评价',
-        timestamp: '55分钟前',
-        color: '#1ABC9C'
-    },
-    {
-        content: '订单提交',
-        description: '订单 20240820002 已提交待支付',
-        timestamp: '1小时前',
-        color: '#3f51b5'
-    },
-    {
-        content: '退款申请',
-        description: '订单 20240819088 申请仅退款,待审核',
-        timestamp: '15小时前',
-        color: '#f44336'
-    },
-    {
-        content: '商品上架',
-        description: '运营专员上架了 12 个新 SKU',
-        timestamp: '1天前',
-        color: '#009688'
-    }
-];
-
-const ranks = [
-    {
-        title: '手机',
-        value: 10000,
-        percent: 80,
-        color: '#f25e43'
-    },
-    {
-        title: '电脑',
-        value: 8000,
-        percent: 70,
-        color: '#00bcd4'
-    },
-    {
-        title: '相机',
-        value: 6000,
-        percent: 60,
-        color: '#64d572'
-    },
-    {
-        title: '衣服',
-        value: 5000,
-        percent: 55,
-        color: '#e9a745'
-    },
-    {
-        title: '书籍',
-        value: 4000,
-        percent: 50,
-        color: '#009688'
-    }
-];
 </script>
 
 <style>
@@ -314,6 +380,11 @@ const ranks = [
     height: 400px;
 }
 
+.pie-chart {
+    width: 100%;
+    height: 320px;
+}
+
 .card-header {
     padding-left: 10px;
     margin-bottom: 20px;
@@ -334,7 +405,7 @@ const ranks = [
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 16px;
+    font-size: 14px;
     color: #000;
 }
 
@@ -358,6 +429,15 @@ const ranks = [
     text-align: center;
     line-height: 40px;
     margin-right: 10px;
+    color: #666;
+}
+
+.rank-top {
+    color: #fff;
+}
+
+.rank-top:nth-child(1) {
+    background: #f25e43;
 }
 
 .rank-item-content {
@@ -375,9 +455,5 @@ const ranks = [
 .rank-item-desc {
     font-size: 14px;
     color: #999;
-}
-.map-chart {
-    width: 100%;
-    height: 350px;
 }
 </style>

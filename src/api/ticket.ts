@@ -157,3 +157,58 @@ export function ticketActionApi(id: number, data: TicketActionParams) {
 export function getTicketStatsApi() {
     return request.get<any, ApiResponse<TicketStats>>('/ticket/stats');
 }
+
+// ========== 首页图表相关 ==========
+
+// 趋势图:近 7 天每日创建数 + 审批通过数
+export interface TicketTrend {
+    dates: string[];
+    created: number[];
+    approved: number[];
+}
+
+export function getTicketTrendApi() {
+    return request.get<any, ApiResponse<TicketTrend>>('/ticket/trend');
+}
+
+// 分布图:状态分布 + 优先级分布(两张饼图)
+export interface DistributionItem {
+    name: string;
+    value: number;
+}
+
+export interface TicketDistribution {
+    status: DistributionItem[];
+    priority: DistributionItem[];
+}
+
+export function getTicketDistributionApi() {
+    return request.get<any, ApiResponse<TicketDistribution>>('/ticket/distribution');
+}
+
+// 最近流转日志(时间线)
+export interface RecentLog {
+    id: number;
+    ticket_id: number;
+    title: string;
+    action: TicketAction;
+    remark: string;
+    operator_name: string;
+    created_at: string;
+}
+
+export function getRecentTicketLogsApi() {
+    return request.get<any, ApiResponse<RecentLog[]>>('/ticket/recent-logs');
+}
+
+// 发起人 Top5(排行榜)
+export interface TopCreator {
+    user_id: number;
+    nickname: string;
+    username: string;
+    count: number;
+}
+
+export function getTopCreatorsApi() {
+    return request.get<any, ApiResponse<TopCreator[]>>('/ticket/top-creators');
+}

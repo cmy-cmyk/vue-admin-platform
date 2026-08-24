@@ -6,6 +6,10 @@ import {
   getTicketDetail,
   doTicketAction,
   getTicketStats,
+  getTicketTrend,
+  getTicketDistribution,
+  getRecentTicketLogs,
+  getTopCreators,
 } from '../controllers/ticket.controller';
 
 const router = Router();
@@ -18,8 +22,12 @@ router.use(authRequired);
 router.get('/', getTicketList);
 router.post('/', createTicket);
 
-// /stats 必须在 /:id 之前注册,否则会被 :id='stats' 匹配导致 404
+// 统计类聚合接口:必须在 /:id 之前注册,否则会被 :id='xxx' 匹配导致 404
 router.get('/stats', getTicketStats);
+router.get('/trend', getTicketTrend);
+router.get('/distribution', getTicketDistribution);
+router.get('/recent-logs', getRecentTicketLogs);
+router.get('/top-creators', getTopCreators);
 
 // 详情 + 流转(带 id 路径)
 router.get('/:id', getTicketDetail);
