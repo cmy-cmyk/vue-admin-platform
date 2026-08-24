@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, refresh, userInfo, logout } from '../controllers/auth.controller';
+import { login, refresh, userInfo, logout, changePassword } from '../controllers/auth.controller';
 import { authRequired } from '../middleware/auth';
 
 const router = Router();
@@ -11,5 +11,6 @@ router.post('/refresh', refresh);
 // 鉴权接口
 router.get('/user-info', authRequired, userInfo);
 router.post('/logout', authRequired, logout);
+router.post('/change-password', authRequired, changePassword);
 
 export default router;

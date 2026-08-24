@@ -102,3 +102,45 @@ export async function logout(_req: Request, res: Response) {
   // 完整版应把 refresh token 加入黑名单(Redis),改造点3再做
   return success(res, null, '退出成功');
 }
+
+// POST /api/auth/change-password
+// body: { oldPassword, newPassword }
+// 个人中心自助改密:校验旧密码 → 更新新密码
+export async function changePassword(req: Request, res: Response) {
+  const { oldPassword, newPassword } = req.body || {};
+  if (!oldPassword || !newPassword) {
+    return fail(res, '旧密码和新密码不能为空');
+  }
+  if (newPassword.length < 6) {
+    return fail(res, '新密码长度不能少于 6 位');
+  }
+
+  const userId = req.user?.userId ?? 0;
+  if (!userId) {
+    return unauthorized(res);
+  }
+
+  // 1. 查当前密码哈希
+  const user = await queryOne<{ password: string }>(
+    'SELECT password FROM user WHERE id = ?',
+    [userId]
+  );
+  if (!user) {
+    return fail(res, '用户不存在', 1, 404);
+  }
+
+  // 2. 校验旧密码
+  const ok = bcrypt.compareSync(oldPassword, user.password);
+  if (!ok) {
+    return fail(res, '旧密码错误');
+  }
+
+  // 3. 更新为新密码哈希
+  const hash = bcrypt.hashSync(newPassword, 10);
+  await queryOne<any>(
+    'UPDATE user SET password = ? WHERE id = ?',
+    [hash, userId]
+  );
+
+  return success(res, null, '密码修改成功,请重新登录');
+}

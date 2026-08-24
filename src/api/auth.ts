@@ -62,3 +62,8 @@ export function getUserInfoApi() {
 export function logoutApi() {
     return request.post<any, ApiResponse<null>>('/auth/logout');
 }
+
+// POST /auth/change-password —— 个人中心自助改密
+export function changePasswordApi(data: { oldPassword: string; newPassword: string }) {
+    return request.post<any, ApiResponse<null>>('/auth/change-password', data);
+}

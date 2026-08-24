@@ -172,6 +172,14 @@ INSERT OR IGNORE INTO menu (id, parent_id, menu_name, menu_type, path, component
 INSERT OR IGNORE INTO role_menu (role_id, menu_id) VALUES
   (1, 30), (2, 30);
 
+-- ===== 个人中心菜单 =====
+INSERT OR IGNORE INTO menu (id, parent_id, menu_name, menu_type, path, component, icon, permiss, sort, visible) VALUES
+  (40, 0, '个人中心', 1, '/ucenter', 'pages/ucenter', 'UserFilled', 'profile:view', 98, 1);
+
+-- 所有登录用户都能进个人中心
+INSERT OR IGNORE INTO role_menu (role_id, menu_id) VALUES
+  (1, 40), (2, 40);
+
 -- ===== 工单演示数据 =====
 -- 三条不同状态的工单,审批人都是 admin(id=1),发起人是 user(id=2)
 INSERT OR IGNORE INTO ticket (id, title, content, priority, status, category, creator_id, current_approver_id) VALUES
