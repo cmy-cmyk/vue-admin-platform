@@ -135,6 +135,15 @@ INSERT OR IGNORE INTO role_menu (role_id, menu_id) VALUES
   (1, 10), (1, 11), (1, 12), (1, 13), (1, 14), (1, 15),
   (2, 10), (2, 11), (2, 12);
 
+-- ===== 主题设置菜单(恢复原模板功能) =====
+-- component 'pages/theme' -> ../views/pages/theme.vue
+INSERT OR IGNORE INTO menu (id, parent_id, menu_name, menu_type, path, component, icon, permiss, sort, visible) VALUES
+  (20, 0, '主题设置', 1, '/theme', 'pages/theme', 'Brush', 'theme:view', 99, 1);
+
+-- 管理员 + 普通用户都能自定义主题
+INSERT OR IGNORE INTO role_menu (role_id, menu_id) VALUES
+  (1, 20), (2, 20);
+
 -- ===== 工单演示数据 =====
 -- 三条不同状态的工单,审批人都是 admin(id=1),发起人是 user(id=2)
 INSERT OR IGNORE INTO ticket (id, title, content, priority, status, category, creator_id, current_approver_id) VALUES
