@@ -89,7 +89,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
     formEl.validate(async (valid: boolean) => {
         if (!valid) {
             ElMessage.error('请检查输入');
-            return false;
+            return;
         }
         loading.value = true;
         try {

@@ -79,8 +79,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
         if (valid) {
             ElMessage.success('注册成功，请登录');
             router.push('/login');
-        } else {
-            return false;
         }
     });
 };

@@ -62,7 +62,9 @@ function buildDynamicRoutes(menus: any[]): RouteRecordRaw[] {
     return menus
         .filter(m => m.menu_type !== 2) // 按钮不算路由
         .map(m => {
-            const route: RouteRecordRaw = {
+            // 用 as RouteRecordRaw 断言绕过 union 类型对 redirect 等必填属性的检查
+            // 实际类型由 vue-router 运行时校验
+            const route = {
                 path: m.path,
                 name: m.path,
                 meta: {
@@ -70,11 +72,9 @@ function buildDynamicRoutes(menus: any[]): RouteRecordRaw[] {
                     permiss: m.permiss || '',
                     icon: m.icon || ''
                 },
-                component: m.component ? getComponent(m.component) : undefined
-            };
-            if (m.children && m.children.length > 0) {
-                route.children = buildDynamicRoutes(m.children);
-            }
+                component: m.component ? getComponent(m.component) : undefined,
+                ...(m.children && m.children.length > 0 ? { children: buildDynamicRoutes(m.children) } : {})
+            } as RouteRecordRaw;
             return route;
         });
 }

@@ -1,0 +1,9 @@
+build: manualChunks 分包 + Docker + 部署配置 + 类型修复
+
+- vite.config.ts 加 manualChunks 分包策略(vue-vendor / element-plus / echarts / editor / utils 独立)+ rollup-plugin-visualizer 包体积分析
+- 升级 vue-tsc 1.4 → 2.0(兼容 TypeScript 5.5+),修复 6 个类型错误
+  · RouteRecordRaw union 类型用 as 断言 + 对象展开避免 never
+  · FormInstance validate 回调返回 boolean → 改为 void
+- Docker 配置:前端(node 构建 + nginx 运行)+ 后端(node 22 + node:sqlite 内置模块)+ docker-compose 编排 + 数据卷持久化
+- 部署配置:nginx.conf(SPA fallback + gzip + 反向代理 + 静态长缓存) + vercel.json(rewrite /api + SPA fallback)
+- README.md 重写:更新技术栈 / 演示账号 / 3 种部署方案(Docker / Vercel+Railway / 裸机 Nginx)

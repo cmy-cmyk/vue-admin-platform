@@ -1,0 +1,49 @@
+# docker-compose:一键启动前后端 + 数据卷持久化
+# 启动: docker compose up -d --build
+# 停止: docker compose down
+# 查看日志: docker compose logs -f
+# 访问前端: http://localhost:8080  后端: http://localhost:3000
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: vue-admin-frontend
+    ports:
+      - '8080:80'
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - vue-admin-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: vue-admin-backend
+    ports:
+      - '3000:3000'
+    volumes:
+      - backend-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # 生产环境必须改成随机字符串(建议用 openssl rand -hex 32 生成)
+      - JWT_ACCESS_SECRET=change-this-to-a-random-access-secret
+      - JWT_REFRESH_SECRET=change-this-to-a-random-refresh-secret
+      - JWT_ACCESS_EXPIRES=2h
+      - JWT_REFRESH_EXPIRES=7d
+      - DB_FILE=/app/data/admin.db
+    restart: unless-stopped
+    networks:
+      - vue-admin-net
+
+volumes:
+  backend-data:
+    driver: local
+
+networks:
+  vue-admin-net:
+    driver: bridge

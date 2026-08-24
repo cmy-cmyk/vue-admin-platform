@@ -1,0 +1,18 @@
+# Docker 构建上下文忽略列表(避免把无用文件打进镜像)
+node_modules
+dist
+server/node_modules
+server/dist
+server/data
+.git
+.github
+.idea
+.vscode
+*.md
+stats.html
+.husky
+.eslintcache
+.env.local
+.env.*.local
+Dockerfile*
+docker-compose*.yml

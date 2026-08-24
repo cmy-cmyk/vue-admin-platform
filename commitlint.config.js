@@ -14,7 +14,9 @@ export default {
         // subject 不能为空
         'subject-empty': [2, 'never'],
         // header 长度限制:8-100(支持中文)
-        'header-max-length': [2, 'always', 100],
-        'header-min-length': [2, 'always', 8]
+		'header-max-length': [2, 'always', 100],
+		'header-min-length': [2, 'always', 8],
+		// 关闭 body 行长度限制(允许较长的中文说明)
+		'body-max-line-length': [0]
     }
 };

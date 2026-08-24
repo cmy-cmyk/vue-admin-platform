@@ -102,7 +102,7 @@ const formRef = ref<FormInstance>();
 const saveEdit = (formEl: FormInstance | undefined) => {
     if (!formEl) return;
     formEl.validate(valid => {
-        if (!valid) return false;
+        if (!valid) return;
         update(form.value);
     });
 };
