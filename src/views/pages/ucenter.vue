@@ -137,17 +137,6 @@
                             </el-form-item>
                         </el-form>
                     </el-tab-pane>
-
-                    <!-- Tab4:关于 -->
-                    <el-tab-pane name="label4" label="关于" class="user-tabpane">
-                        <div class="plugins-tips">
-                            本项目
-                            <el-link href="https://github.com/cmy-cmyk/vue-admin-platform" target="_blank">
-                                vue-admin-platform
-                            </el-link>
-                            基于 Vue 3 + TypeScript + Pinia + Element Plus 构建,作为企业级后台系统的快速交付基座。
-                        </div>
-                    </el-tab-pane>
                 </el-tabs>
             </el-card>
         </div>

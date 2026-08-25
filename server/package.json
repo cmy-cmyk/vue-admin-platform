@@ -1,7 +1,7 @@
 {
   "name": "flowexpress-server",
   "version": "1.0.0",
-  "description": "FlowExpress(流波)后端服务:Express + TypeScript + SQLite + JWT,工单审批驱动中后台",
+  "description": "工单审批系统后端服务:Express + TypeScript + SQLite + JWT,工单审批驱动中后台",
   "main": "dist/app.js",
   "engines": {
     "node": ">=22.5.0"

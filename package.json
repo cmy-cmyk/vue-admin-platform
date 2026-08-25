@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "type": "module",
-    "description": "FlowExpress(流波):基于 Vue 3 + TypeScript + Pinia + Element Plus 的工单审批驱动中后台",
+    "description": "工单审批系统:基于 Vue 3 + TypeScript + Pinia + Element Plus 的工单审批驱动中后台",
     "author": "Cmy <cmy20000303@163.com>",
     "license": "MIT",
     "repository": {

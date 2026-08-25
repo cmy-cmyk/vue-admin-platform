@@ -74,6 +74,8 @@ const userStore = useUserStore();
     top: 70px;
     bottom: 0;
     overflow-y: scroll;
+    border-right: 1px solid #e4e7ed;
+    box-sizing: border-box;
 }
 
 .sidebar::-webkit-scrollbar {

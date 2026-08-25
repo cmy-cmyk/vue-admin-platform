@@ -4,8 +4,8 @@
         <div class="login-brand">
             <div class="brand-content">
                 <div class="brand-logo">
-                    <img src="../../assets/img/logo.svg" alt="FlowExpress" />
-                    <span class="brand-name">FlowExpress</span>
+                    <img src="../../assets/img/logo.svg" alt="工单审批系统" />
+                    <span class="brand-name">工单审批系统</span>
                 </div>
                 <h1 class="brand-slogan">
                     工单流驱动的
@@ -92,7 +92,7 @@
                     </p>
                 </el-form>
             </div>
-            <p class="login-footer">© 2026 FlowExpress · 流波</p>
+            <p class="login-footer">© 2026 工单审批系统</p>
         </div>
     </div>
 </template>
