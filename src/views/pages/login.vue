@@ -1,99 +1,49 @@
 <template>
     <div class="login-page">
-        <!-- 左侧:品牌展示区(青绿渐变) -->
-        <div class="login-brand">
-            <div class="brand-content">
-                <div class="brand-logo">
-                    <img src="../../assets/img/logo.svg" alt="工单审批系统" />
-                    <span class="brand-name">工单审批系统</span>
-                </div>
-                <h1 class="brand-slogan">
-                    工单流驱动的
-                    <br />
-                    中后台基座
-                </h1>
-                <p class="brand-desc">
-                    状态机驱动审批闭环 · RBAC 三级权限管控
-                    <br />
-                    JWT 双 Token 鉴权 · 全栈 TypeScript
-                </p>
-                <div class="brand-features">
-                    <div class="feature-item">
-                        <i class="el-icon-lx-appreciate"></i>
-                        <span>工单全生命周期管理</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="el-icon-lx-appreciate"></i>
-                        <span>多级审批 + 驳回回退</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="el-icon-lx-appreciate"></i>
-                        <span>操作日志审计追溯</span>
-                    </div>
-                    <div class="feature-item">
-                        <i class="el-icon-lx-appreciate"></i>
-                        <span>消息中心实时触达</span>
-                    </div>
-                </div>
+        <div class="login-card">
+            <div class="login-header">
+                <img class="logo" src="../../assets/img/logo.svg" alt="工单审批系统" />
+                <span class="login-title">工单审批系统</span>
             </div>
-            <!-- 装饰光斑(纯 CSS,无图片资源) -->
-            <div class="brand-glow brand-glow-1"></div>
-            <div class="brand-glow brand-glow-2"></div>
-        </div>
-
-        <!-- 右侧:登录表单区 -->
-        <div class="login-form-wrap">
-            <div class="login-container">
-                <div class="login-header">
-                    <img class="logo mr10" src="../../assets/img/logo.svg" alt="" />
-                    <div class="login-title">欢迎回来</div>
-                </div>
-                <el-form ref="login" :model="param" :rules="rules" size="large">
-                    <el-form-item prop="username">
-                        <el-input v-model="param.username" placeholder="用户名">
-                            <template #prepend>
-                                <el-icon>
-                                    <User />
-                                </el-icon>
-                            </template>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item prop="password">
-                        <el-input
-                            v-model="param.password"
-                            type="password"
-                            placeholder="密码"
-                            @keyup.enter="submitForm(login)"
-                        >
-                            <template #prepend>
-                                <el-icon>
-                                    <Lock />
-                                </el-icon>
-                            </template>
-                        </el-input>
-                    </el-form-item>
-                    <div class="pwd-tips">
-                        <el-checkbox v-model="checked" class="pwd-checkbox" label="记住密码" />
-                        <el-link type="primary" @click="$router.push('/reset-pwd')">忘记密码</el-link>
-                    </div>
-                    <el-button
-                        class="login-btn"
-                        type="primary"
-                        size="large"
-                        :loading="loading"
-                        @click="submitForm(login)"
+            <el-form ref="login" :model="param" :rules="rules" size="large" class="login-form">
+                <el-form-item prop="username">
+                    <el-input v-model="param.username" placeholder="用户名">
+                        <template #prefix>
+                            <el-icon>
+                                <User />
+                            </el-icon>
+                        </template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input
+                        v-model="param.password"
+                        type="password"
+                        placeholder="密码"
+                        @keyup.enter="submitForm(login)"
                     >
-                        登录
-                    </el-button>
-                    <p class="login-tips">Tips : 演示账号 admin / 123456 或 user / 123456</p>
-                    <p class="login-text">
-                        没有账号？
-                        <el-link type="primary" @click="$router.push('/register')">立即注册</el-link>
-                    </p>
-                </el-form>
-            </div>
-            <p class="login-footer">© 2026 工单审批系统</p>
+                        <template #prefix>
+                            <el-icon>
+                                <Lock />
+                            </el-icon>
+                        </template>
+                    </el-input>
+                </el-form-item>
+                <div class="pwd-tips">
+                    <el-checkbox v-model="checked" class="pwd-checkbox" label="记住密码" />
+                    <el-link type="primary" @click="$router.push('/reset-pwd')">忘记密码</el-link>
+                </div>
+                <el-button class="login-btn" type="primary" size="large" :loading="loading" @click="submitForm(login)">
+                    登录
+                </el-button>
+                <p class="login-tips">演示账号 admin / 123456</p>
+                <p class="login-text">
+                    没有账号？
+                    <el-link type="primary" @click="$router.push('/register')">立即注册</el-link>
+                </p>
+            </el-form>
         </div>
+        <p class="login-footer">© 2026 工单审批系统</p>
     </div>
 </template>
 
@@ -168,145 +118,50 @@ tabs.clearTabs();
 </script>
 
 <style scoped>
-/* === 双屏布局:左品牌右表单 === */
+/* === 单卡片居中:现代简约企业风 === */
 .login-page {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    background: #fff;
-}
-
-/* === 左侧品牌区:青绿渐变 === */
-.login-brand {
     position: relative;
-    flex: 1;
-    overflow: hidden;
-    /* 商务深藏青对角渐变:深藏青 → 钢蓝 */
-    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 45%, #2563eb 100%);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.brand-content {
-    position: relative;
-    z-index: 2;
-    padding: 60px;
-    max-width: 520px;
-}
-
-.brand-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 80px;
-}
-
-.brand-logo img {
-    width: 36px;
-    height: 36px;
-    /* logo 反色,在深色背景上更清晰 */
-    filter: brightness(0) invert(1);
-}
-
-.brand-name {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.brand-slogan {
-    font-size: 40px;
-    font-weight: 700;
-    line-height: 1.25;
-    margin-bottom: 24px;
-    letter-spacing: -0.5px;
-}
-
-.brand-desc {
-    font-size: 15px;
-    line-height: 1.8;
-    color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 48px;
-}
-
-.brand-features {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px 24px;
-}
-
-.feature-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.feature-item i {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-/* 装饰光斑:纯 CSS 径向渐变,营造空间感 */
-.brand-glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.4;
-    pointer-events: none;
-}
-
-.brand-glow-1 {
-    width: 400px;
-    height: 400px;
-    top: -100px;
-    right: -100px;
-    background: radial-gradient(circle, #60a5fa 0%, transparent 70%);
-}
-
-.brand-glow-2 {
-    width: 300px;
-    height: 300px;
-    bottom: -50px;
-    left: -50px;
-    background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
-}
-
-/* === 右侧登录表单区 === */
-.login-form-wrap {
-    width: 520px;
-    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px;
-    background: #fff;
+    min-height: 100vh;
+    background-color: #1e3a8a;
+    background-image: url('../../assets/img/login-bg.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-.login-container {
-    width: 100%;
-    max-width: 380px;
+.login-card {
+    width: 400px;
+    max-width: calc(100% - 40px);
+    padding: 44px 40px 32px;
+    background: #fff;
+    border: 1px solid #e4e7ed;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+    box-sizing: border-box;
 }
 
 .login-header {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 40px;
+    gap: 10px;
+    margin-bottom: 36px;
 }
 
 .logo {
     width: 32px;
+    height: 32px;
 }
 
 .login-title {
-    font-size: 22px;
-    color: #18181b;
+    font-size: 20px;
     font-weight: 600;
+    color: #18181b;
+    letter-spacing: 0.5px;
 }
 
 .pwd-tips {
@@ -314,7 +169,7 @@ tabs.clearTabs();
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
-    margin: -10px 0 10px;
+    margin: -8px 0 16px;
     color: #71717a;
 }
 
@@ -334,13 +189,14 @@ tabs.clearTabs();
     font-size: 12px;
     color: #a1a1aa;
     margin-top: 16px;
+    text-align: center;
 }
 
 .login-text {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 12px;
     font-size: 14px;
     color: #71717a;
 }
@@ -348,17 +204,21 @@ tabs.clearTabs();
 .login-footer {
     position: absolute;
     bottom: 24px;
+    left: 0;
+    right: 0;
+    text-align: center;
     font-size: 12px;
     color: #a1a1aa;
 }
 
-/* === 响应式:窄屏隐藏左侧品牌区 === */
-@media (max-width: 900px) {
-    .login-brand {
-        display: none;
-    }
-    .login-form-wrap {
-        width: 100%;
+/* === 响应式:小屏卡片撑满 === */
+@media (max-width: 480px) {
+    .login-card {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        min-height: 100vh;
+        box-shadow: none;
     }
 }
 </style>

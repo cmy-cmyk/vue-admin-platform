@@ -68,7 +68,7 @@ import { useUserStore } from '../store/user';
 import { useMessageStore } from '../store/message';
 import { useRouter } from 'vue-router';
 import { resetRouter } from '../router';
-import imgurl from '../assets/img/img.jpg';
+import imgurl from '../assets/img/img.svg';
 
 const userStore = useUserStore();
 const messageStore = useMessageStore();

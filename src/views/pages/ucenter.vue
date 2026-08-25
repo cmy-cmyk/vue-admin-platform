@@ -149,7 +149,7 @@ import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus';
 import { VueCropper } from 'vue-cropper';
 import 'vue-cropper/dist/index.css';
-import avatar from '@/assets/img/img.jpg';
+import avatar from '@/assets/img/img.svg';
 import { useUserStore } from '@/store/user';
 import { useMessageStore } from '@/store/message';
 import { changePasswordApi } from '@/api/auth';
@@ -339,10 +339,7 @@ onMounted(() => {
 .user-profile-bg {
     width: 100%;
     height: 200px;
-    background-image: url('../../assets/img/ucenter-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 45%, #2563eb 100%);
 }
 
 .user-profile {

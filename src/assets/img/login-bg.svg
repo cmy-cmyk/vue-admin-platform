@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+    <title>登录页背景</title>
+    <!-- 柔和光晕 -->
+    <circle cx="120" cy="120" r="340" fill="#235adc" opacity="0.06" />
+    <circle cx="1340" cy="800" r="400" fill="#235adc" opacity="0.06" />
+    <circle cx="1320" cy="120" r="200" fill="#235adc" opacity="0.04" />
+    <circle cx="100" cy="820" r="220" fill="#235adc" opacity="0.04" />
+    <!-- 审批工作流曲线 + 节点(上) -->
+    <path d="M-40 200 Q 360 120 720 220 T 1480 180" fill="none" stroke="#235adc" stroke-width="1.5" opacity="0.10" />
+    <circle cx="360" cy="160" r="5" fill="#235adc" opacity="0.16" />
+    <circle cx="720" cy="220" r="5" fill="#235adc" opacity="0.16" />
+    <circle cx="1100" cy="185" r="5" fill="#235adc" opacity="0.16" />
+    <!-- 审批工作流曲线 + 节点(下) -->
+    <path d="M-40 720 Q 400 640 760 740 T 1480 700" fill="none" stroke="#235adc" stroke-width="1.5" opacity="0.10" />
+    <circle cx="400" cy="690" r="5" fill="#235adc" opacity="0.16" />
+    <circle cx="760" cy="740" r="5" fill="#235adc" opacity="0.16" />
+    <circle cx="1200" cy="705" r="5" fill="#235adc" opacity="0.16" />
+    <!-- 细网格点(极淡) -->
+    <g fill="#235adc" opacity="0.05">
+        <circle cx="220" cy="430" r="2.5" />
+        <circle cx="300" cy="430" r="2.5" />
+        <circle cx="220" cy="510" r="2.5" />
+        <circle cx="300" cy="510" r="2.5" />
+        <circle cx="1140" cy="430" r="2.5" />
+        <circle cx="1220" cy="430" r="2.5" />
+        <circle cx="1140" cy="510" r="2.5" />
+        <circle cx="1220" cy="510" r="2.5" />
+    </g>
+</svg>

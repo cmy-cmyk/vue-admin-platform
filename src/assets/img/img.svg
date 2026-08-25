@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <title>默认头像</title>
+    <rect width="64" height="64" fill="#1e3a8a" />
+    <circle cx="32" cy="24" r="10" fill="#ffffff" />
+    <path d="M14 56 C14 42 22 36 32 36 C42 36 50 42 50 56 Z" fill="#ffffff" />
+</svg>
